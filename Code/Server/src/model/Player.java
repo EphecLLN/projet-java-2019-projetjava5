@@ -487,13 +487,13 @@ public class Player extends Thread {
                             sleep(150);
                         }
                         shotExecuted = true;
-                        Airport.getSwitchStateBonus();               
+                        Airport.setSwitchStateBonus();               
                         break;
         
                     case "D":
                         //TODO -> pas urgent! 
                         shotExecuted = true;
-                        RadarTower.getSwitchStateBonus();               
+                        RadarTower.setSwitchStateBonus();               
                         break;
         
                     case "B":
@@ -503,7 +503,7 @@ public class Player extends Thread {
                             checkForHit(coord);
                         }
                         shotExecuted = true;
-                        RailwayGun.getSwitchStateBonus();     
+                        RailwayGun.setSwitchStateBonus();     
                         break;
         
                     case "R":
@@ -514,7 +514,7 @@ public class Player extends Thread {
                             sleep(500);
                         }
                         shotExecuted = true;
-                        MMRL.getSwitchStateBonus(); 
+                        MMRL.setSwitchStateBonus(); 
                         break;
                 }
 
