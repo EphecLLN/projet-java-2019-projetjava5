@@ -25,7 +25,7 @@ public class Unit {
         this.name = name;
         this.size = size;
         this.isAlive = true;
-        this.counterBonus = counterBonus;
+        this.counterBonus = counterBonus+1;
         this.counterBonusMax = counterBonus;
         this.stateBonus = true;
         this.coordState = new HashMap<String, Boolean>();
