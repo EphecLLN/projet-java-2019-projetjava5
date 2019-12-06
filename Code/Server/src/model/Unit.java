@@ -14,20 +14,20 @@ public class Unit {
     private int size;
     private boolean isAlive;
     private int counterBonus;
-    public boolean EtatBonus;                                         
+    private boolean stateBonus;                                         
     private int counterBonusMax;
     protected HashMap<String, Boolean> coordState;
 
     /**
      * Constructor
      */
-    public Unit(String name, int size, int counterBonus, boolean EtatBonus) {
+    public Unit(String name, int size, int counterBonus) {
         this.name = name;
         this.size = size;
         this.isAlive = true;
         this.counterBonus = counterBonus;
         this.counterBonusMax = counterBonus;
-        this.EtatBonus = EtatBonus;
+        this.stateBonus = true;
         this.coordState = new HashMap<String, Boolean>();
     }
 
@@ -99,27 +99,36 @@ public class Unit {
     protected boolean getIsAlive(){
     	return isAlive;
     }
+
     /**
-     * Method thzt dectect the status of bonus
+     * Faire la javaDoc //TODO
+     * @return {boolean} - change the value of stateBonus
+     */
+    protected boolean setSwitchStateBonus(){
+        return stateBonus = false;
+    }
+    
+    /**
+     * Method that dectect the status of bonus
      * It can either be active or disable
      * 
      * @return {boolean} - retrun true if the bonus is active, false not
      */
-    protected boolean getEtatBonus(){
-            if(!EtatBonus){
+    protected boolean getStateBonus(){
+            if(!stateBonus){
                 counterBonus--;
                 if(counterBonus == 0){
-                    EtatBonus = true;
+                    stateBonus = true;
                     counterBonus = counterBonusMax;
                 }
                 else{
-                    EtatBonus = false;
-
+                    stateBonus = false;
                 }
             }
             else{
-                EtatBonus = true;
+                stateBonus = true;
             }   
-        return EtatBonus;
+        return stateBonus;
     }
+
 }

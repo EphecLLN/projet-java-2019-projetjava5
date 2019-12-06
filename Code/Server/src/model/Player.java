@@ -83,12 +83,12 @@ public class Player extends Thread {
         enemyGrid = new enemyGrid();
 
         //Creating the units and adding them to the units array.
-        Airport = new Unit("Airport (2x4)", 8, 7, true);
-        RadarTower = new Unit("Radar Tower (2x3)", 6, 5, true);
-        HeadQuarter = new Unit("HeadQuarter (2x2)", 4, 0, true);
-        RailwayGun = new Unit("Railway Gun (1x6)", 6, 8, true);
-        MMRL = new Unit("MMRL (2x2)", 4, 3, true);
-        Tank = new Unit("Tank (1x2)", 2, 0, true);
+        Airport = new Unit("Airport (2x4)", 8, 7);
+        RadarTower = new Unit("Radar Tower (2x3)", 6, 5);
+        HeadQuarter = new Unit("HeadQuarter (2x2)", 4, 0);
+        RailwayGun = new Unit("Railway Gun (1x6)", 6, 8);
+        MMRL = new Unit("MMRL (2x2)", 4, 3);
+        Tank = new Unit("Tank (1x2)", 2, 0);
         units[0] = Airport;
         units[1] = RadarTower;       
         units[2] = HeadQuarter;
@@ -298,22 +298,22 @@ public class Player extends Thread {
     protected String getAvailableShotTypes(){
         String availableShotTypes = "S ";
         if(Airport.getIsAlive()){
-            if(Airport.getEtatBonus()){
+            if(Airport.getStateBonus()){
                 availableShotTypes += "- A ";
             }
         }
         if(false){                // if(RadarTower.getIsAlive()){ //TODO
-            if(RadarTower.getIsAlive()){
+            if(RadarTower.getStateBonus()){
                 availableShotTypes += "- D ";
             }
         }
         if(RailwayGun.getIsAlive()){
-            if(RailwayGun.getEtatBonus()){
+            if(RailwayGun.getStateBonus()){
                 availableShotTypes += "- B ";
             }
         }
         if(MMRL.getIsAlive()){
-            if(MMRL.getEtatBonus()){
+            if(MMRL.getStateBonus()){
                 availableShotTypes += "- R ";
             }
         }
@@ -389,7 +389,7 @@ public class Player extends Thread {
                     coord = myGrid.getCoordIndex(shotCoord);
                     if(coord[0] >= 0 && coord[1] >= 0){  
                         sendToClient("Q?");
-                        sendToClient("Enter thcounterBonus > 0e direction of the airstrike. H : Horizontal;  any other key : Vertical \n");
+                        sendToClient("Enter the direction of the airstrike. H : Horizontal;  any other key : Vertical \n");
                         String direction = getFormClient();
                         sendToClient("Rem"); sendToClient("2");
                         shotCoord ="";
@@ -487,13 +487,13 @@ public class Player extends Thread {
                             sleep(150);
                         }
                         shotExecuted = true;
-                        Airport.EtatBonus = false;               
+                        Airport.getSwitchStateBonus();               
                         break;
         
                     case "D":
                         //TODO -> pas urgent! 
                         shotExecuted = true;
-                        RadarTower.EtatBonus = false;               
+                        RadarTower.getSwitchStateBonus();               
                         break;
         
                     case "B":
@@ -503,7 +503,7 @@ public class Player extends Thread {
                             checkForHit(coord);
                         }
                         shotExecuted = true;
-                        RailwayGun.EtatBonus = false;     
+                        RailwayGun.getSwitchStateBonus();     
                         break;
         
                     case "R":
@@ -514,7 +514,7 @@ public class Player extends Thread {
                             sleep(500);
                         }
                         shotExecuted = true;
-                        MMRL.EtatBonus = false; 
+                        MMRL.getSwitchStateBonus(); 
                         break;
                 }
 
