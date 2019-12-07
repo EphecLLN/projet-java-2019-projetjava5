@@ -37,7 +37,7 @@ class PlayerTest{
         
         assertEquals(p2,p1.otherPlayer());
         assertEquals(p1,p2.otherPlayer());
-
+       
     }
 
 } 
