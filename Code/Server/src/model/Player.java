@@ -34,7 +34,7 @@ public class Player extends Thread {
 
     PlayerModel model;
 
-    String userName;
+    public String userName;
     private myGrid myGrid;
     private enemyGrid enemyGrid;
     private Unit Airport, RadarTower, HeadQuarter, RailwayGun, MMRL, Tank;
@@ -293,7 +293,6 @@ public class Player extends Thread {
      * if a unit is destroyed or if it is too soon to re-use a certain shot-type, the shot is not available.
      * 
      * @return {String} - Returns a string containing the letters associated to the shot-types if they are available 
-     * //TODO -> Implement shoot limtit 
      */
     protected String getAvailableShotTypes(){
         String availableShotTypes = "S ";
