@@ -50,10 +50,4 @@ public class Grid {
         return coordIndex;
     }
 
-    // for debugging only - do nut run if not for debugging
-    public static void main(String[] args) {
-        Grid g = new Grid();
-        System.out.println(Arrays.toString(g.getCoordIndex("H4")));
-    }
-
 }

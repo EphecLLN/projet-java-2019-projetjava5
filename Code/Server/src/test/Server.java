@@ -35,7 +35,7 @@ public class Server  {
     protected DataOutputStream out;
     public static boolean allPlayerConnected = false;
     public static HashMap<String,Player> Players = new HashMap<>();
-
+    
 	 //Escape characters tho control the cmdline display. => ! only works on unix systems !
      public static final String RED_FG       = "\u001B[31m";
      public static final String GREEN_FG     = "\u001B[32m";
@@ -46,8 +46,15 @@ public class Server  {
      public static final String CLEAR_SCREEN = "\u001B[2J";
      public static final String HOME_CURSOR  = "\u001B[H";
 
+    /**
+     * Constructor
+     */
+    public Server(){
+        Players.put("P1",null);
+        Players.put("P2",null);
+    }
      
-     private void getIpv4Adress() throws SocketException {
+    private void getIpv4Adress() throws SocketException {
     	 Enumeration e = NetworkInterface.getNetworkInterfaces();
     	 while (e.hasMoreElements()) {
     		 NetworkInterface n = (NetworkInterface) e.nextElement();
@@ -59,7 +66,7 @@ public class Server  {
     				 }
     		 }
     	 }
-     }
+    }
     /**
      * Method that clears the cmdline Screen and sets the cursor to home.
      */
@@ -90,9 +97,7 @@ public class Server  {
      * 
      */
     protected void initServer(){
-        Players.put("P1",null);
-        Players.put("P2",null);
-
+        
     	try {
             clearScreen();
             System.out.println("Which port-number do you want to use? (press enter for default port: 5555)");       

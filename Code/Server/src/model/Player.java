@@ -48,7 +48,6 @@ public class Player extends Thread {
     private DataInputStream in; 
     private DataOutputStream out; 
     private Socket sock; 
-    private static int numberOfClientsConnected=0;
 
     //Escape characters tho control the cmdline display. => ! only works on unix systems !
     public static final String RED_FG       = "\u001B[31m";
@@ -100,7 +99,6 @@ public class Player extends Thread {
         this.sock = sock;
         this.in = in; 
         this.out = out;
-        numberOfClientsConnected++;
 
         //Get own identifier 
         if(Server.Players.get("P1") == null){
