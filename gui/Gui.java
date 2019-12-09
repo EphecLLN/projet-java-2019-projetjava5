@@ -3,6 +3,7 @@ package gui;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
+import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -18,6 +19,7 @@ import javax.swing.JToolBar;
 import javax.swing.SwingConstants; 
 public class Gui {  
 	
+	JTextArea outputText = new JTextArea();
      Gui() {  
         JFrame f= new JFrame("Battleground");
         Font font = new Font(Font.SANS_SERIF,Font.BOLD,20);
@@ -26,23 +28,29 @@ public class Gui {
         f.setLayout(null);
         
         JPanel myGrid=new JPanel();  
-        myGrid.setBounds(5,25,520,515);    
-        myGrid.setBackground(Color.gray);
+        myGrid.setBounds(5,25,520,515);
+        //myGrid.setBackground(Color.gray);
+        
+        myGrid.setLayout(new GridLayout(14, 14));
+        GuiGrid.createYourGrid(myGrid);
         
         JTextPane myGridTitle = new JTextPane();
-        myGridTitle.setBounds(255, 0, 130, 25);
-        myGridTitle.setText("Your Grid :");
+        myGridTitle.setBounds(180, 0, 231, 25);
+        myGridTitle.setText("Your Battleground :");
         myGridTitle.setFont(font);
         myGridTitle.setForeground(Color.GREEN);
         myGridTitle.setEditable(false);
         
         JPanel ennemyGrid=new JPanel();  
         ennemyGrid.setBounds(540,25,510,515);    
-        ennemyGrid.setBackground(Color.gray); 
+        //ennemyGrid.setBackground(Color.gray);
+        
+        ennemyGrid.setLayout(new GridLayout(14, 14));
+        GuiGrid.createEnnemyGrid(ennemyGrid);
         
         JTextPane ennemyGridTitle = new JTextPane();
-        ennemyGridTitle.setBounds(650, 0, 200, 25);
-        ennemyGridTitle.setText("Ennemy's Grid :");
+        ennemyGridTitle.setBounds(650, 0, 290, 25);
+        ennemyGridTitle.setText("Ennemy's Battleground :");
         ennemyGridTitle.setFont(font);
         ennemyGridTitle.setForeground(Color.RED);
         ennemyGridTitle.setEditable(false);
@@ -51,13 +59,13 @@ public class Gui {
         outputPane.setBounds(10, 600, 1180, 280);
         outputPane.setBackground(Color.RED);
         
-        JTextArea outputText = new JTextArea();
+        //outputText declarer avant pour pouvoir y acceder avec setters
         outputText.setFont(font);
         outputText.setForeground(Color.YELLOW);
         outputText.setPreferredSize(new Dimension(1170, 270));
         outputText.setBackground(Color.BLACK);
-        outputText.setText("Zone de texte pour relier output du code (ligne de commande) ici (GUI)\n\n");
-        outputText.append("Text added with 'back to line' (TODO :implementer fonction pour Martin)");
+        outputText.setText("Zone de texte \n\n");
+        outputText.append("Text added with 'back to line' (fonction 'addText'=> Protected)");
         outputPane.add(outputText);
         
         JPanel weaponsPane = new JPanel();
@@ -119,7 +127,7 @@ public class Gui {
         f.add(separationPane); 
         f.add(myGridTitle);
         f.add(ennemyGridTitle);
-        f.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         f.setLocationRelativeTo(null);
         f.setVisible(true);
         }  
@@ -159,7 +167,14 @@ public class Gui {
 			}
 		});
      }
+     protected void setText(String text) {
+    	 outputText.setText(text+ "\n");
+     }
+     protected void addText(String text) {
+    	 outputText.append("\n" +text);
+     }
      public static void main(String args[]) {  
-    	 new Gui();
-    	 }  
-    } 
+    	 Gui gui = new Gui();
+    	 gui.addText("Coucou!");
+     }  
+} 
