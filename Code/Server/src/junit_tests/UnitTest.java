@@ -1,6 +1,13 @@
-package server;
+/**
+ * @author Martin Perdaens
+ * @date 15/11/2019
+ */
 
-import static org.junit.jupiter.api.Assertions.*;
+package junit_tests;
+
+import model.*;
+
+import static org.junit.Assert.assertEquals;
 import org.junit.jupiter.api.Test;
 
 class UnitTest2{
