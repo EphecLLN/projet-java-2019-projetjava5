@@ -150,9 +150,18 @@ public class Client  {
                     break;
                     
                 case "Q?": //Server ask a question
-                    System.out.print(getFromServer()); //print the question 
-                    strToServer = scn.nextLine();
-                    sendToServer(strToServer);
+                    String command = getFromServer();
+                    if(command.split("-")[0].equals("U")){
+                        System.out.print(getFromServer()); //print the question 
+                        sendToServer(command);
+                        strToServer = scn.nextLine();
+                        sendToServer(strToServer);
+                    }
+                    else{
+                        System.out.print(getFromServer()); //print the question 
+                        strToServer = scn.nextLine();
+                        sendToServer(strToServer);
+                    }
                     break;
 
                 case "insertUnit":

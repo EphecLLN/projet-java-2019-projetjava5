@@ -7,7 +7,7 @@ package view;
 
 import java.util.Observer;
 
-import controller.PlayerController;
+import controller.PlayerCmdController;
 import model.PlayerModel;
 
 /**
@@ -17,9 +17,9 @@ import model.PlayerModel;
 public abstract class PlayerView implements Observer{
 	
 	protected PlayerModel model;
-	protected PlayerController controller;
+	protected PlayerCmdController controller;
 	
-	public PlayerView(PlayerModel model, PlayerController controller) {
+	public PlayerView(PlayerModel model, PlayerCmdController controller) {
 		this.model = model;
 		this.controller = controller;
 		model.addObserver(this); // Connexion entre la vue et le modele

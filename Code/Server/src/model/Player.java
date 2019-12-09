@@ -8,7 +8,7 @@ package model;
 import java.io.*;
 import java.net.*;
 
-import controller.PlayerController;
+import controller.PlayerCmdController;
 import test.*;
 import view.PlayerViewCmd;
 
@@ -33,6 +33,8 @@ import java.util.Arrays;
 public class Player extends Thread {
 
     PlayerModel model;
+    PlayerCmdController playerContr;
+    PlayerViewCmd cmd;
 
     public String userName;
     private myGrid myGrid;
@@ -73,8 +75,8 @@ public class Player extends Thread {
     { 
 
         model = new PlayerModel(this);
-        PlayerController playerContr = new PlayerController(model);
-        PlayerViewCmd cmd = new PlayerViewCmd(model, playerContr);
+        playerContr = new PlayerCmdController(model);
+        cmd  = new PlayerViewCmd(model, playerContr);
         playerContr.addView(cmd);
         
         //Creating both grids
@@ -192,18 +194,20 @@ public class Player extends Thread {
      * @param unit {Unit} - The unit that needs to be placed 
      */
     private void unitPlacer(Unit unit) {
-        String userInput, coord1, coord2;
-        String[] unitCoords;
-        int[] coord1Index, coord2Index;
-        boolean isPlaced = false;
-        int numberOfRows, numberOfCols;
-        int failCount = 0;
-
+    
         sendToClient("Q?");
+        sendToClient("U-"+unit.getSize());
         sendToClient("\nWhere do you want to place the " + unit.getName()+ "? Enter top-left and bottom-right coordinates separated by a whitespace.\n");
-
-        unitCoords = new String[unit.getSize()];
-
+        String[] unitCoords = playerContr.PlaceUnitControl();
+        
+        unit.initCoordState(unitCoords);
+        for (int i = 0; i < unitCoords.length; i++) {
+            myGrid.setGridCell(unitCoords[i], unit);
+            model.Changed();
+            model.toNotify();
+        }
+        
+        /*
         while (!isPlaced) {
             userInput = getFormClient();
             try {
@@ -263,7 +267,7 @@ public class Player extends Thread {
                 sendToClient("Input not valid. Please enter valid input\n");
                 failCount = 1;
             }
-        }
+        }*/
     }
 
 
