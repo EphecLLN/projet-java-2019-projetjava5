@@ -6,8 +6,8 @@ import org.junit.jupiter.api.Test;
 class UnitTest2{
 
 	/**
-	 * Test qui permet de vérifier la taille des unités
-	 * on teste 2 unités qui correpondent aux 2 extremes
+	 * Test qui permet de vï¿½rifier la taille des unitï¿½s
+	 * on teste 2 unitï¿½s qui correpondent aux 2 extremes
 	 * */
 	@Test
 	void testGetSize() {
@@ -18,9 +18,9 @@ class UnitTest2{
 	}
 	
 	/**
-	 * Test qui permet de vérifier le nom des unités
+	 * Test qui permet de vï¿½rifier le nom des unitï¿½s
 	 * Valeur attendue pour "GetName":
-	 * ==> Le nom de l'unité
+	 * ==> Le nom de l'unitï¿½
 	 * */
 	@Test
 	void testGetname() {
@@ -31,7 +31,7 @@ class UnitTest2{
 	}
 	
 	/**
-	 * Test qui permet de vérifier si les cases d'un unité sont à "true"
+	 * Test qui permet de vï¿½rifier si les cases d'un unitï¿½ sont ï¿½ "true"
 	 * Valeur attendue pour "GetCoordState"
 	 * ==> true = case en vie
 	 * */
@@ -45,7 +45,7 @@ class UnitTest2{
 	}
 	
 	/**
-	 * Test qui permet de vérifier si "les cases" d'une unité ont bien été initiées a "true"
+	 * Test qui permet de vï¿½rifier si "les cases" d'une unitï¿½ ont bien ï¿½tï¿½ initiï¿½es a "true"
 	 * Valeur attendue pour "initCoordState":
 	 * ==> true = case en vie
 	 * */
@@ -61,9 +61,9 @@ class UnitTest2{
 	}
 	
 	/**
-	 * Test qui permet de vérifier la fonction "setCoordState" a bien mis une case à "false"
+	 * Test qui permet de vï¿½rifier la fonction "setCoordState" a bien mis une case ï¿½ "false"
 	 *Valeur attendue pour "setCoordState":
-	 * ==> false = case détruite
+	 * ==> false = case dï¿½truite
 	 * */
 	@Test
 	void testsetCoordState() {
@@ -78,10 +78,10 @@ class UnitTest2{
         }
 	
 	/**
-	 * Teste qui permet de voir si une unité est toujours en vie ou détruite
+	 * Teste qui permet de voir si une unitï¿½ est toujours en vie ou dï¿½truite
 	 * Valeur attendue pour "getIsAlive" :
 	 * ==> true = En vie
-	 * ==> false = Détruite
+	 * ==> false = Dï¿½truite
 	 * */
 	@Test
 	void testGetIsAlive() {
@@ -107,6 +107,48 @@ class UnitTest2{
 		testUnit.setCoordState("B5");
 		assertEquals(true, testUnit2.getIsAlive());
 	}
+
+    /**
+	 * Test to check if "stateBonus" change of true to false
+	 *  */                              
+	@Test
+	void setSwitchStateBonus() {
+		Unit testUnit2 = new Unit("testUnit",4, 4);
+		testUnit2.setSwitchStateBonus();
+		 assertEquals(false,testUnit2.getSwitchStateBonus() );
+                                        
+	}
+	/**
+	 * Test to check if "stateBonus" change of false to true
+	 * after "counterBonus" lap
+	 *  */ 
+	@Test
+	void getStateBonus() {
+		Unit testUnit3 = new Unit("testUnit",4, 4);
+		Unit testUnit4 = new Unit("testUnit",4, 4);
+
+		assertEquals(true,testUnit3.getStateBonus() );
+
+		testUnit4.setSwitchStateBonus();
+		assertEquals(false,testUnit4.getSwitchStateBonus());
+		
+		testUnit4.getStateBonus();
+		assertEquals(false,testUnit4.getSwitchStateBonus());
+		
+		testUnit4.getStateBonus();
+		assertEquals(false,testUnit4.getSwitchStateBonus());
+		
+		testUnit4.getStateBonus();
+		assertEquals(false,testUnit4.getSwitchStateBonus());
+		
+		testUnit4.getStateBonus();
+		assertEquals(false,testUnit4.getSwitchStateBonus());
+		
+		testUnit4.getStateBonus();
+		assertEquals(true,testUnit4.getSwitchStateBonus());
+
+	}
+
 	
 }
 

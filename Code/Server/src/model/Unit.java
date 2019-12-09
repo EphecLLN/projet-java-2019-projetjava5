@@ -101,11 +101,18 @@ public class Unit {
     }
 
     /**
-     * Faire la javaDoc //TODO
+     * Method that change the value stateBonus when the user use an bonus
      * @return {boolean} - change the value of stateBonus
      */
-    protected boolean setSwitchStateBonus(){
-        return stateBonus = false;
+    protected void setSwitchStateBonus(){
+    	stateBonus = false;
+    }
+    /**
+     * Method to test in UnitTest.java
+     * @return {boolean} - change the value of stateBonus
+     */
+    protected boolean getSwitchStateBonus(){
+    	return stateBonus;
     }
     
     /**
