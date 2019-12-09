@@ -12,8 +12,6 @@ import controller.PlayerCmdController;
 import test.*;
 import view.PlayerViewCmd;
 
-import java.util.Arrays;
-
 /**
  * This class discribes a Player with its attributes and methods. 
  * This class is created whenever a client connects to the server and it's asociated to that client. 
@@ -60,6 +58,10 @@ public class Player extends Thread {
     public static final String RESET_COLOR  = "\u001B[0m";
     public static final String CLEAR_SCREEN = "\u001B[2J";
     public static final String HOME_CURSOR  = "\u001B[H";
+
+    //!---------------------------------------------------------------------------------
+    //!                                  Constructor
+    //!---------------------------------------------------------------------------------
 
     /**
      * Constructor
@@ -114,46 +116,10 @@ public class Player extends Thread {
         
     } 
 
-    /**
-     * This method prints the client information associated to this instance of the Player class on the server cmdLine
-     */
-    private void getClientInfo(){
-        long id = Thread.currentThread().getId(); 
 
-        userName = getFormClient();
-        System.out.println("A new "+ PURPLE_FG +"client"+ BLUE_FG +" \""+userName+"\""+ RESET_COLOR +" with id" + RED_FG +" ("+id+")"+
-                            RESET_COLOR +" joined via " + YELLOW_FG + sock.getLocalAddress().toString().replaceAll("/", "")+ RESET_COLOR);
-        System.out.println("-------------------------------------------------------------------------");
-    }
-
-    /**
-     * Method that returns the reference of the other client's Player instance 
-     * 
-     * @return {Player} - The object Player of the other client 
-     */
-    public Player otherPlayer(){
-        if(myKey.equals("P1")){
-            return Server.Players.get("P2");
-        }
-        else{
-            return Server.Players.get("P1");
-        }
-    }
-
-    /**
-     * Method that lets this instance sleep for X miliseconds.
-     * 
-     * @param ms {int} - the time this thread needs to sleep in miliseconds
-     */
-    private void sleep(int ms){
-        try{
-            Thread.sleep(ms);
-        }
-        catch(InterruptedException e){
-            System.out.println(e);
-            System.out.println(RED_FG+ "Thread Error, game closed!" + RESET_COLOR);
-        }
-    }
+    //!---------------------------------------------------------------------------------
+    //!                         Communication with Client
+    //!---------------------------------------------------------------------------------
 
     /**
      * Method that takes a string and tries to send it to the client.
@@ -187,6 +153,9 @@ public class Player extends Thread {
         return "";
     }
 
+    //!---------------------------------------------------------------------------------
+    //!                                Placing of units
+    //!---------------------------------------------------------------------------------
 
      /**
      * Function that asks the player to place a particular unit on the grid and saves its position.
@@ -207,69 +176,7 @@ public class Player extends Thread {
             model.toNotify();
         }
         
-        /*
-        while (!isPlaced) {
-            userInput = getFormClient();
-            try {
-                coord1 = userInput.split(" ")[0]; //retreives the top-left coordinate
-                coord2 = userInput.split(" ")[1]; //retreives the bottom-rigth coordinate
-                coord1Index = myGrid.getCoordIndex(coord1);
-                coord2Index = myGrid.getCoordIndex(coord2);
-                numberOfRows = coord2Index[0] - coord1Index[0] + 1;
-                numberOfCols = coord2Index[1] - coord1Index[1] + 1;
-                // check if input is correct and add if place is empty:
-                int k = 0;
-                if (numberOfRows * numberOfCols == unit.getSize()) {
-                    for (int i = 0; i < numberOfRows; i++) {
-                        for (int j = 0; j < numberOfCols; j++) {
-                            unitCoords[k] = myGrid.rowNames[coord1Index[0] + i] + myGrid.colNames[coord1Index[1] + j];
-                            k++;
-                        }
-                    }
-                    for (int i = 0; i < unitCoords.length; i++) {
-                        if (myGrid.getGridCell(unitCoords[i]) != null) {
-                            isPlaced = false;
-                            break;
-                        } else {
-                            isPlaced = true;
-                        }
-                    }
-
-                    if (isPlaced) {
-                        unit.initCoordState(unitCoords);
-                        sendToClient("Rem");
-                        sendToClient("3");
-                        for (int i = 0; i < unitCoords.length; i++) {
-                            myGrid.setGridCell(unitCoords[i], unit);
-                            model.Changed();
-                            model.toNotify();
-                        }
-                    } else {
-                        sendToClient("Rem");
-                        sendToClient(""+(failCount + 1));
-                        sendToClient("Q?");
-                        sendToClient("Input not valid. Units can not overlap eachother. Please enter valid input\n");
-                        failCount = 1;
-                    }
-                } else {
-                    isPlaced = false;
-                    sendToClient("Rem");
-                    sendToClient(""+(failCount + 1));
-                    sendToClient("Q?");
-                    sendToClient("Input not valid. Please enter valid input\n");
-                    failCount = 1;
-                }
-            } catch (Exception e) {
-                isPlaced = false;
-                sendToClient("Rem");
-                sendToClient(""+(failCount + 1));
-                sendToClient("Q?");
-                sendToClient("Input not valid. Please enter valid input\n");
-                failCount = 1;
-            }
-        }*/
     }
-
 
     /**
      * Method that iterates through every unit of the player and sends it to the unitPlacer-method.
@@ -282,6 +189,7 @@ public class Player extends Thread {
             }  
         }
         sendToClient("Q?");
+        sendToClient("U-");
         sendToClient("All units are placed, press 'enter' to start playing.\n");
         getFormClient();
         sendToClient("Rem");
@@ -289,6 +197,9 @@ public class Player extends Thread {
         isReady = true;
     }
 
+    //!---------------------------------------------------------------------------------
+    //!                                 Shooting
+    //!---------------------------------------------------------------------------------
 
     /**
      * Method thet checks which sot-types are available for the player to use,
@@ -301,7 +212,7 @@ public class Player extends Thread {
         if(Airport.getIsAlive()){
             availableShotTypes += "- A ";
         }
-        if(false){                // if(RadarTower.getIsAlive()){ //TODO
+        if(false){                          /////Todo if(RadarTower.getIsAlive()){ => will not be implemented
             availableShotTypes += "- D ";
         }
         if(RailwayGun.getIsAlive()){
@@ -483,7 +394,7 @@ public class Player extends Thread {
                         break;
         
                     case "D":
-                        //TODO -> pas urgent! 
+                        /////TODO => Will not be implemented
                         shotExecuted = true;
                         break;
         
@@ -554,13 +465,17 @@ public class Player extends Thread {
         }
     }
 
+    //!---------------------------------------------------------------------------------
+    //!                                    Playing  
+    //!---------------------------------------------------------------------------------
+
     /**
      * This Method is the actual game-management,
      * The truns are being handed and the active-player is alowed to shoot.
      * 
      * Be aware -> this is method starts an infinite loop that can only be stopped if one of the players wins!
      * 
-     * //TODO -> check if a player disconnects
+     * //TODO -> check if a player disconnects => will not be impemented 
      */
     protected void play(){
         while(true){
@@ -603,7 +518,21 @@ public class Player extends Thread {
     }
 
     
-    //// Getters and setters : 
+    //!---------------------------------------------------------------------------------
+    //!                               Getters & Setters
+    //!---------------------------------------------------------------------------------
+
+    /**
+     * This method prints the client information associated to this instance of the Player class on the server cmdLine
+     */
+    private void getClientInfo(){
+        long id = Thread.currentThread().getId(); 
+
+        userName = getFormClient();
+        System.out.println("A new "+ PURPLE_FG +"client"+ BLUE_FG +" \""+userName+"\""+ RESET_COLOR +" with id" + RED_FG +" ("+id+")"+
+                            RESET_COLOR +" joined via " + YELLOW_FG + sock.getLocalAddress().toString().replaceAll("/", "")+ RESET_COLOR);
+        System.out.println("-------------------------------------------------------------------------");
+    }
 
     /**
      * Method tht returns the myGrid instance
@@ -621,6 +550,39 @@ public class Player extends Thread {
      */
     public enemyGrid getEnemyGrid(){
         return enemyGrid;
+    }
+
+    //!---------------------------------------------------------------------------------
+    //!                             Other methods
+    //!---------------------------------------------------------------------------------
+
+    /**
+     * Method that returns the reference of the other client's Player instance 
+     * 
+     * @return {Player} - The object Player of the other client 
+     */
+    public Player otherPlayer(){
+        if(myKey.equals("P1")){
+            return Server.Players.get("P2");
+        }
+        else{
+            return Server.Players.get("P1");
+        }
+    }
+
+    /**
+     * Method that lets this instance sleep for X miliseconds.
+     * 
+     * @param ms {int} - the time this thread needs to sleep in miliseconds
+     */
+    private void sleep(int ms){
+        try{
+            Thread.sleep(ms);
+        }
+        catch(InterruptedException e){
+            System.out.println(e);
+            System.out.println(RED_FG+ "Thread Error, game closed!" + RESET_COLOR);
+        }
     }
 
 
