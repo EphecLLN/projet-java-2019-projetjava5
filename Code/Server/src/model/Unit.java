@@ -37,7 +37,7 @@ public class Unit {
      * 
      * @param coords {String[]} - Array of all the coordinates on which the unit is placed 
      */    
-    protected void initCoordState(String [] coords) {
+    public void initCoordState(String [] coords) {
     	for(int i= 0; i < coords.length; i++){
             coordState.put(coords[i],true);
         }
@@ -48,7 +48,7 @@ public class Unit {
      * 
      * @return {String} - The name of the unit
      */
-    protected String getName() {
+    public String getName() {
         return name;
     }
 
@@ -58,7 +58,7 @@ public class Unit {
      *  
      * @return {int} - the size of the unit 
      */
-    protected int getSize() {
+    public int getSize() {
         return size;
     }
 
@@ -69,7 +69,7 @@ public class Unit {
      * @param key {String} - The coordinate of the cell of which you want to know the state
      * @return {boolean} - The state of the cell
      */
-    protected boolean getCoordState(String key) {
+    public boolean getCoordState(String key) {
     	return coordState.get(key);
     }
 
@@ -79,7 +79,7 @@ public class Unit {
      * 
      * @param key {String} - the coordinate of the cell of which the state needs to be changed
      */  
-    protected void setCoordState(String key) {
+    public void setCoordState(String key) {
     	coordState.replace(key, false);
     	for (boolean cellValue : coordState.values()) {
     		if(cellValue){
@@ -96,7 +96,7 @@ public class Unit {
      * 
      * @return {boolean} - returns true if the unit is alive, false otherwise
      */
-    protected boolean getIsAlive(){
+    public boolean getIsAlive(){
     	return isAlive;
     }
 
@@ -104,14 +104,14 @@ public class Unit {
      * Method that change the value stateBonus when the user use an bonus
      * @return {boolean} - change the value of stateBonus
      */
-    protected void setSwitchStateBonus(){
+    public void setSwitchStateBonus(){
     	stateBonus = false;
     }
     /**
      * Method to test in UnitTest.java
      * @return {boolean} - change the value of stateBonus
      */
-    protected boolean getSwitchStateBonus(){
+    public boolean getSwitchStateBonus(){
     	return stateBonus;
     }
     
@@ -121,7 +121,7 @@ public class Unit {
      * 
      * @return {boolean} - retrun true if the bonus is active, false not
      */
-    protected boolean getStateBonus(){
+    public boolean getStateBonus(){
             if(!stateBonus){
                 counterBonus--;
                 if(counterBonus == 0){
