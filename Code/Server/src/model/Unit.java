@@ -12,16 +12,22 @@ public class Unit {
 
     private String name;
     private int size;
-    private boolean isAlive;                     
+    private boolean isAlive;
+    private int counterBonus;
+    private boolean stateBonus;                                         
+    private int counterBonusMax;
     protected HashMap<String, Boolean> coordState;
 
     /**
      * Constructor
      */
-    public Unit(String name, int size) {
+    public Unit(String name, int size, int counterBonus) {
         this.name = name;
         this.size = size;
         this.isAlive = true;
+        this.counterBonus = counterBonus+1;
+        this.counterBonusMax = counterBonus;
+        this.stateBonus = true;
         this.coordState = new HashMap<String, Boolean>();
     }
 
@@ -93,6 +99,43 @@ public class Unit {
     protected boolean getIsAlive(){
     	return isAlive;
     }
+
+    /**
+     * Method that change the value stateBonus when the user use an bonus
+     * @return {boolean} - change the value of stateBonus
+     */
+    protected void setSwitchStateBonus(){
+    	stateBonus = false;
+    }
+    /**
+     * Method to test in UnitTest.java
+     * @return {boolean} - change the value of stateBonus
+     */
+    protected boolean getSwitchStateBonus(){
+    	return stateBonus;
+    }
     
+    /**
+     * Method that dectect the status of bonus
+     * It can either be active or disable
+     * 
+     * @return {boolean} - retrun true if the bonus is active, false not
+     */
+    protected boolean getStateBonus(){
+            if(!stateBonus){
+                counterBonus--;
+                if(counterBonus == 0){
+                    stateBonus = true;
+                    counterBonus = counterBonusMax;
+                }
+                else{
+                    stateBonus = false;
+                }
+            }
+            else{
+                stateBonus = true;
+            }   
+        return stateBonus;
+    }
 
 }
