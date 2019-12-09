@@ -34,7 +34,7 @@ public class Player extends Thread {
 
     PlayerModel model;
 
-    public String userName;
+    String userName;
     private myGrid myGrid;
     private enemyGrid enemyGrid;
     private Unit Airport, RadarTower, HeadQuarter, RailwayGun, MMRL, Tank;
@@ -48,6 +48,7 @@ public class Player extends Thread {
     private DataInputStream in; 
     private DataOutputStream out; 
     private Socket sock; 
+    private static int numberOfClientsConnected=0;
 
     //Escape characters tho control the cmdline display. => ! only works on unix systems !
     public static final String RED_FG       = "\u001B[31m";
@@ -82,12 +83,12 @@ public class Player extends Thread {
         enemyGrid = new enemyGrid();
 
         //Creating the units and adding them to the units array.
-        Airport = new Unit("Airport (2x4)", 8);
-        RadarTower = new Unit("Radar Tower (2x3)", 6);
-        HeadQuarter = new Unit("HeadQuarter (2x2)", 4);
-        RailwayGun = new Unit("Railway Gun (1x6)", 6);
-        MMRL = new Unit("MMRL (2x2)", 4);
-        Tank = new Unit("Tank (1x2)", 2);
+        Airport = new Unit("Airport (2x4)", 8, 7);
+        RadarTower = new Unit("Radar Tower (2x3)", 6, 5);
+        HeadQuarter = new Unit("HeadQuarter (2x2)", 4, 0);
+        RailwayGun = new Unit("Railway Gun (1x6)", 6, 8);
+        MMRL = new Unit("MMRL (2x2)", 4, 3);
+        Tank = new Unit("Tank (1x2)", 2, 0);
         units[0] = Airport;
         units[1] = RadarTower;       
         units[2] = HeadQuarter;
@@ -99,6 +100,7 @@ public class Player extends Thread {
         this.sock = sock;
         this.in = in; 
         this.out = out;
+        numberOfClientsConnected++;
 
         //Get own identifier 
         if(Server.Players.get("P1") == null){
@@ -291,20 +293,29 @@ public class Player extends Thread {
      * if a unit is destroyed or if it is too soon to re-use a certain shot-type, the shot is not available.
      * 
      * @return {String} - Returns a string containing the letters associated to the shot-types if they are available 
+     * //TODO -> Implement shoot limtit 
      */
     protected String getAvailableShotTypes(){
         String availableShotTypes = "S ";
         if(Airport.getIsAlive()){
-            availableShotTypes += "- A ";
+            if(Airport.getStateBonus()){
+                availableShotTypes += "- A ";
+            }
         }
         if(false){                // if(RadarTower.getIsAlive()){ //TODO
-            availableShotTypes += "- D ";
+            if(RadarTower.getStateBonus()){
+                availableShotTypes += "- D ";
+            }
         }
         if(RailwayGun.getIsAlive()){
-            availableShotTypes += "- B ";
+            if(RailwayGun.getStateBonus()){
+                availableShotTypes += "- B ";
+            }
         }
         if(MMRL.getIsAlive()){
-            availableShotTypes += "- R ";
+            if(MMRL.getStateBonus()){
+                availableShotTypes += "- R ";
+            }
         }
         return availableShotTypes;
     }
@@ -407,7 +418,7 @@ public class Player extends Thread {
                         sendToClient("Coordinate out of range, please enter correct coordinate:\n");
                         shotCoord = getFormClient();
                         sendToClient("Rem"); sendToClient("2");
-                    }                
+                    }
                     break;
 
                 case "D":
@@ -476,11 +487,13 @@ public class Player extends Thread {
                             sleep(150);
                         }
                         shotExecuted = true;
+                        Airport.setSwitchStateBonus();               
                         break;
         
                     case "D":
                         //TODO -> pas urgent! 
                         shotExecuted = true;
+                        RadarTower.setSwitchStateBonus();               
                         break;
         
                     case "B":
@@ -489,7 +502,8 @@ public class Player extends Thread {
                         for(String coord : coordsArray){
                             checkForHit(coord);
                         }
-                        shotExecuted = true;    
+                        shotExecuted = true;
+                        RailwayGun.setSwitchStateBonus();     
                         break;
         
                     case "R":
@@ -500,6 +514,7 @@ public class Player extends Thread {
                             sleep(500);
                         }
                         shotExecuted = true;
+                        MMRL.setSwitchStateBonus(); 
                         break;
                 }
 
