@@ -18,8 +18,8 @@ class UnitTest2{
 	 * */
 	@Test
 	void testGetSize() {
-		Unit testUnit = new Unit("testUnit",2);
-		Unit testUnit2 = new Unit("testUnit2",8);
+		Unit testUnit = new Unit("testUnit",2, 4);
+		Unit testUnit2 = new Unit("testUnit",8, 4);
 		assertEquals(2, testUnit.getSize());
 		assertEquals(8, testUnit2.getSize());
 	}
@@ -31,8 +31,8 @@ class UnitTest2{
 	 * */
 	@Test
 	void testGetname() {
-		Unit testUnit = new Unit("testUnit",2);
-		Unit testUnit2 = new Unit("testUnit2",8);
+		Unit testUnit = new Unit("testUnit",2, 4);
+		Unit testUnit2 = new Unit("testUnit",8, 4);
 		assertEquals("testUnit", testUnit.getName());
 		assertEquals("testUnit2", testUnit2.getName());
 	}
@@ -44,7 +44,7 @@ class UnitTest2{
 	 * */
 	@Test
 	void testGetCoordState() {
-		Unit testUnit = new Unit("testUnit",2);	
+		Unit testUnit = new Unit("testUnit",4, 4);	
 		String[] coordsU1 = {"B2","B3"};
 		testUnit.initCoordState(coordsU1);
 		assertEquals(true, testUnit.getCoordState("B2"));
@@ -58,7 +58,7 @@ class UnitTest2{
 	 * */
 	@Test
 	void testinitCoordState() {
-		Unit testUnit = new Unit("testUnit",4);	
+		Unit testUnit = new Unit("testUnit",4, 4);	
 		String[] coordsU = {"D2","D3","E2","E3"};
 		testUnit.initCoordState(coordsU);
 		assertEquals(true, testUnit.getCoordState("D2"));
@@ -74,7 +74,7 @@ class UnitTest2{
 	 * */
 	@Test
 	void testsetCoordState() {
-		Unit testUnit = new Unit("testUnit",4);
+		Unit testUnit = new Unit("testUnit",4, 4);
 		String[] coordsU1 = {"C2","C3","D2","D3"};
 		testUnit.initCoordState(coordsU1);
 		testUnit.setCoordState("D2");
@@ -92,7 +92,7 @@ class UnitTest2{
 	 * */
 	@Test
 	void testGetIsAlive() {
-		Unit testUnit = new Unit("testUnit",4);
+		Unit testUnit = new Unit("testUnit",4, 4);
 		String[] coordsU1 = {"C2","C3","D2","D3"};
 		testUnit.initCoordState(coordsU1);
 		testUnit.setCoordState("C2");
@@ -101,7 +101,7 @@ class UnitTest2{
 		testUnit.setCoordState("D3");
 		assertEquals(false, testUnit.getIsAlive());
 		
-		Unit testUnit2 = new Unit("testUnit2",8);
+		Unit testUnit2 = new Unit("testUnit2",8,4);
 		String[] coordsU2 = {"A2","A3","A4","A5","B2","B3","B4","B5"};
 		testUnit.initCoordState(coordsU2);
 		testUnit.setCoordState("A2");

@@ -14,8 +14,8 @@ import org.junit.jupiter.api.Test;
 class myGridTest {
 
     private myGrid testmyGrid = new myGrid();
-    private Unit testUnit_1 = new Unit("testUnit_1",6);
-    private Unit testUnit_2 = new Unit("testUnit_2",8);
+    private Unit testUnit_1 = new Unit("testUnit_1",6,0);
+    private Unit testUnit_2 = new Unit("testUnit_2",8,0);
 
 	/**
 	 * Test method for the getGridCell() method from the myGrid class.
