@@ -105,5 +105,112 @@ public class PlayerController {
             }
         }
 		return unitCoords;
-	}
+    }
+    
+
+    /**
+     * Method that ask the client a gicen question and checks if the input is 
+     * valid depending on the shotType.
+     * 
+     * @param question {String} - The question that needs to be asked the client
+     * @param shotType {String} - The type of shot that is currently used
+     * @return {String} - The validated coordinate(s) (if more than 1, separated by ';')  
+     */
+    public String askForCoord(String question,String shotType){
+        boolean controlPassed = false;
+        model.player.sendToClient("Rem"); model.player.sendToClient("3");
+        model.player.sendToClient("Q?");
+        model.player.sendToClient("C-");
+        model.player.sendToClient(question);
+        String shotCoord = model.player.getFormClient();
+        int[] coord;
+    
+        while(!controlPassed){
+            switch(shotType){
+                case "S":
+                    coord = model.player.getMyGrid().getCoordIndex(shotCoord);
+                    if(coord[0] >= 0 && coord[1] >= 0){ //Coord is in range
+                        controlPassed = true;
+                    }
+                    else{
+                        model.player.sendToClient("Q?");
+                        model.player.sendToClient("C-");
+                        model.player.sendToClient("Coordinate out of range, please enter correct coordinate:\n");
+                        shotCoord = model.player.getFormClient();
+                        model.player.sendToClient("Rem"); model.player.sendToClient("2");
+                    }
+                    break;
+
+                case "A":
+                    coord = model.player.getMyGrid().getCoordIndex(shotCoord);
+                    if(coord[0] >= 0 && coord[1] >= 0){  
+                        model.player.sendToClient("Q?");
+                        model.player.sendToClient("C-");
+                        model.player.sendToClient("Enter the direction of the airstrike. H : Horizontal;  any other key : Vertical \n");
+                        String direction = model.player.getFormClient();
+                        model.player.sendToClient("Rem"); model.player.sendToClient("2");
+                        shotCoord ="";
+                        for(int i=-3;i<4;i++){
+                            if(direction.equals("H")) {
+                                try{
+                                    shotCoord += model.player.getMyGrid().rowNames[coord[0]]+model.player.getMyGrid().colNames[coord[1]+i]+";";
+                                }
+                                catch(IndexOutOfBoundsException e){
+                                    //Some of the shots will be outside of the grid (doesn't matter)
+                                }
+                            }
+                            else {
+                                try{
+                                    shotCoord += model.player.getMyGrid().rowNames[coord[0]+i]+model.player.getMyGrid().colNames[coord[1]]+";";
+                                }
+                                catch(IndexOutOfBoundsException e){
+                                    //Some of the shots will be outside of the grid (doesn't matter)
+                                }       
+                            }
+                        }
+                        controlPassed = true;
+                    }
+                    else{
+                        model.player.sendToClient("Q?");
+                        model.player.sendToClient("C-");
+                        model.player.sendToClient("Coordinate out of range, please enter correct coordinate:\n");
+                        shotCoord = model.player.getFormClient();
+                        model.player.sendToClient("Rem"); model.player.sendToClient("2");
+                    }                
+                    break;
+
+                case "D":
+                    break;
+
+                case "B":
+                    coord = model.player.getMyGrid().getCoordIndex(shotCoord);
+                    if(coord[0] >= 0 && coord[1] >= 0){ //Coord is in range
+                        shotCoord ="";
+                        for(int i =-1; i<2;i++){
+                            for(int j =-1; j<2;j++){
+                                try{
+                                    shotCoord += model.player.getMyGrid().rowNames[coord[0]+i]+model.player.getMyGrid().colNames[coord[1]+j]+";";
+                                }
+                                catch(IndexOutOfBoundsException e){
+                                    //Some of the shots will be outside of the grid (doesn't matter)
+                                }  
+                            }
+                        }
+                        controlPassed = true;
+                    }
+                    else{
+                        model.player.sendToClient("Q?");
+                        model.player.sendToClient("C-");
+                        model.player.sendToClient("Coordinate out of range, please enter correct coordinate:\n");
+                        shotCoord = model.player.getFormClient();
+                        model.player.sendToClient("Rem"); model.player.sendToClient("2");
+                    }
+                    break;
+            }
+        }
+
+        model.player.sendToClient("Rem"); model.player.sendToClient("2");
+        return shotCoord;
+    }
+
 }

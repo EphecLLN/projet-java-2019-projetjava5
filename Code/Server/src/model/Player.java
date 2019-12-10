@@ -258,105 +258,7 @@ public class Player extends Thread {
 
 
 
-    /**
-     * Method that ask the client a gicen question and checks if the input is 
-     * valid depending on the shotType.
-     * 
-     * @param question {String} - The question that needs to be asked the client
-     * @param shotType {String} - The type of shot that is currently used
-     * @return {String} - The validated coordinate(s) (if more than 1, separated by ';')  
-     */
-    protected String askForCoord(String question,String shotType){
-        boolean controlPassed = false;
-        sendToClient("Rem"); sendToClient("3");
-        sendToClient("Q?");
-        sendToClient(question);
-        String shotCoord = getFormClient();
-        int[] coord;
     
-        while(!controlPassed){
-            switch(shotType){
-                case "S":
-                    coord = myGrid.getCoordIndex(shotCoord);
-                    if(coord[0] >= 0 && coord[1] >= 0){ //Coord is in range
-                        controlPassed = true;
-                    }
-                    else{
-                        sendToClient("Q?");
-                        sendToClient("Coordinate out of range, please enter correct coordinate:\n");
-                        shotCoord = getFormClient();
-                        sendToClient("Rem"); sendToClient("2");
-                    }
-                    break;
-
-                case "A":
-                    coord = myGrid.getCoordIndex(shotCoord);
-                    if(coord[0] >= 0 && coord[1] >= 0){  
-                        sendToClient("Q?");
-                        sendToClient("Enter the direction of the airstrike. H : Horizontal;  any other key : Vertical \n");
-                        String direction = getFormClient();
-                        sendToClient("Rem"); sendToClient("2");
-                        shotCoord ="";
-                        for(int i=-3;i<4;i++){
-                            if(direction.equals("H")) {
-                                try{
-                                    shotCoord += myGrid.rowNames[coord[0]]+myGrid.colNames[coord[1]+i]+";";
-                                }
-                                catch(IndexOutOfBoundsException e){
-                                    //Some of the shots will be outside of the grid (doesn't matter)
-                                }
-                            }
-                            else {
-                                try{
-                                    shotCoord += myGrid.rowNames[coord[0]+i]+myGrid.colNames[coord[1]]+";";
-                                }
-                                catch(IndexOutOfBoundsException e){
-                                    //Some of the shots will be outside of the grid (doesn't matter)
-                                }       
-                            }
-                        }
-                        controlPassed = true;
-                    }
-                    else{
-                        sendToClient("Q?");
-                        sendToClient("Coordinate out of range, please enter correct coordinate:\n");
-                        shotCoord = getFormClient();
-                        sendToClient("Rem"); sendToClient("2");
-                    }                
-                    break;
-
-                case "D":
-                    break;
-
-                case "B":
-                    coord = myGrid.getCoordIndex(shotCoord);
-                    if(coord[0] >= 0 && coord[1] >= 0){ //Coord is in range
-                        shotCoord ="";
-                        for(int i =-1; i<2;i++){
-                            for(int j =-1; j<2;j++){
-                                try{
-                                    shotCoord += myGrid.rowNames[coord[0]+i]+myGrid.colNames[coord[1]+j]+";";
-                                }
-                                catch(IndexOutOfBoundsException e){
-                                    //Some of the shots will be outside of the grid (doesn't matter)
-                                }  
-                            }
-                        }
-                        controlPassed = true;
-                    }
-                    else{
-                        sendToClient("Q?");
-                        sendToClient("Coordinate out of range, please enter correct coordinate:\n");
-                        shotCoord = getFormClient();
-                        sendToClient("Rem"); sendToClient("2");
-                    }
-                    break;
-            }
-        }
-
-        sendToClient("Rem"); sendToClient("2");
-        return shotCoord;
-    }
 
 
     /**
@@ -371,6 +273,7 @@ public class Player extends Thread {
         int failCount = 0;
 
         sendToClient("Q?");
+        sendToClient("C-");
         sendToClient("What type of shot do you want to use?     Available: "+ getAvailableShotTypes() +"\n"+
         "S : Singleshot; A : Airstrike; D : Radar discovery; B : Bigshot; R : Rocketstrike\n");
         shotType = getFormClient();
@@ -379,12 +282,12 @@ public class Player extends Thread {
             if(getAvailableShotTypes().contains(shotType)){
                 switch (shotType) {
                     case "S":
-                        checkForHit(askForCoord("Enter the coordinate of the shot. Ex: H4 \n",shotType));
+                        checkForHit(playerContr.askForCoord("Enter the coordinate of the shot. Ex: H4 \n",shotType));
                         shotExecuted = true;
                         break;
         
                     case "A":
-                        coords = askForCoord("Enter the coordinate of the center of the airstrike. Ex: H4 \n",shotType);
+                        coords = playerContr.askForCoord("Enter the coordinate of the center of the airstrike. Ex: H4 \n",shotType);
                         coordsArray = coords.split(";");
                         for(String coord : coordsArray){
                             checkForHit(coord);
@@ -399,7 +302,7 @@ public class Player extends Thread {
                         break;
         
                     case "B":
-                        coords = askForCoord("Enter the coordinate of the central shot. Ex: H4 \n",shotType);
+                        coords = playerContr.askForCoord("Enter the coordinate of the central shot. Ex: H4 \n",shotType);
                         coordsArray = coords.split(";");
                         for(String coord : coordsArray){
                             checkForHit(coord);
@@ -424,12 +327,14 @@ public class Player extends Thread {
                 if(types.contains(shotType)){
                     sendToClient("Rem"); sendToClient(""+(failCount + 2));
                     sendToClient("Q?");
+                    sendToClient("C-");
                     sendToClient("The shot-type you entered is not available. Use another one.\n");
                     shotType = getFormClient();
                 }
                 else{
                     sendToClient("Rem"); sendToClient(""+(failCount + 2));
                     sendToClient("Q?");
+                    sendToClient("C-");
                     sendToClient("Invalid input. Please enter valid shot-type.\n");
                     shotType = getFormClient();
                 }

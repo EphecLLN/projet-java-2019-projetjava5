@@ -25,7 +25,7 @@ Ctr -> C : asking for valid input <br>
 #### Tir :
 
 M -> C : Q? <br>
-M -> C : T-[SHot type] <br>
+M -> C : S-[SHot type] <br>
 M -> C : [Request] <br>
 
 

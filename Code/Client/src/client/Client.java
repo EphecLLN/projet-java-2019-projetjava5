@@ -157,12 +157,17 @@ public class Client  {
                         strToServer = scn.nextLine();
                         sendToServer(strToServer);
                     }
+                    else if(command.split("-")[0].equals("S")){
+                        System.out.print(getFromServer()); //print the question 
+                        sendToServer(command);
+                        strToServer = scn.nextLine();
+                        sendToServer(strToServer);
+                    }
                     else if(command.split("-")[0].equals("C")){
                         System.out.print(getFromServer()); //print the question 
                         strToServer = scn.nextLine();
                         sendToServer(strToServer);
                     }
-                    else{System.out.println("ERROR");} //TODO 
                     break;
 
                 case "insertUnit":
