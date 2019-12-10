@@ -271,7 +271,7 @@
 											"top": 727,
 											"width": 263,
 											"height": 13,
-											"text": "#initCoordState(coords: Array<String>): void",
+											"text": "+initCoordState(coords: Array<String>): void",
 											"horizontalAlignment": 0
 										},
 										{
@@ -322,7 +322,7 @@
 											"top": 772,
 											"width": 263,
 											"height": 13,
-											"text": "#getCoordState(key: String): boolean",
+											"text": "+getCoordState(key: String): boolean",
 											"horizontalAlignment": 0
 										},
 										{
@@ -339,7 +339,7 @@
 											"top": 787,
 											"width": 263,
 											"height": 13,
-											"text": "#setCoordState(key: String): void",
+											"text": "+setCoordState(key: String): void",
 											"horizontalAlignment": 0
 										},
 										{
@@ -356,7 +356,7 @@
 											"top": 802,
 											"width": 263,
 											"height": 13,
-											"text": "#getIsAlive(): boolean",
+											"text": "+getIsAlive(): boolean",
 											"horizontalAlignment": 0
 										},
 										{
@@ -373,7 +373,7 @@
 											"top": 817,
 											"width": 263,
 											"height": 13,
-											"text": "#setSwitchStateBonus()",
+											"text": "+setSwitchStateBonus()",
 											"horizontalAlignment": 0
 										},
 										{
@@ -390,7 +390,7 @@
 											"top": 832,
 											"width": 263,
 											"height": 13,
-											"text": "#getStateBonus()",
+											"text": "+getStateBonus()",
 											"horizontalAlignment": 0
 										}
 									],
@@ -4101,7 +4101,6 @@
 								"$ref": "AAAAAAFuQHH7QxhM5Hw="
 							},
 							"name": "initCoordState",
-							"visibility": "protected",
 							"parameters": [
 								{
 									"_type": "UMLParameter",
@@ -4168,7 +4167,6 @@
 								"$ref": "AAAAAAFuQHH7QxhM5Hw="
 							},
 							"name": "getCoordState",
-							"visibility": "protected",
 							"parameters": [
 								{
 									"_type": "UMLParameter",
@@ -4197,7 +4195,6 @@
 								"$ref": "AAAAAAFuQHH7QxhM5Hw="
 							},
 							"name": "setCoordState",
-							"visibility": "protected",
 							"parameters": [
 								{
 									"_type": "UMLParameter",
@@ -4226,7 +4223,6 @@
 								"$ref": "AAAAAAFuQHH7QxhM5Hw="
 							},
 							"name": "getIsAlive",
-							"visibility": "protected",
 							"parameters": [
 								{
 									"_type": "UMLParameter",
@@ -4245,8 +4241,7 @@
 							"_parent": {
 								"$ref": "AAAAAAFuQHH7QxhM5Hw="
 							},
-							"name": "setSwitchStateBonus",
-							"visibility": "protected"
+							"name": "setSwitchStateBonus"
 						},
 						{
 							"_type": "UMLOperation",
@@ -4254,8 +4249,7 @@
 							"_parent": {
 								"$ref": "AAAAAAFuQHH7QxhM5Hw="
 							},
-							"name": "getStateBonus",
-							"visibility": "protected"
+							"name": "getStateBonus"
 						}
 					]
 				},
