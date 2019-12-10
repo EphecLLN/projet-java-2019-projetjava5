@@ -15,11 +15,11 @@ import view.*;
  * This class is currently not usefull since the syntax/input control is made whitin the model. 
  * 
  */
-public class PlayerCmdController {
+public class PlayerController {
 	private PlayerModel model;
     private PlayerView view = null;
 
-	public PlayerCmdController(PlayerModel model) {
+	public PlayerController(PlayerModel model) {
 		this.model = model;
 	}
 
@@ -27,6 +27,13 @@ public class PlayerCmdController {
 		this.view = view;
 	}
 
+    /**
+     * Method that intercepts the incomming message from the client and checks for input errors.
+     * If no errors are detected, the method returns the complete list of coordinates on which the unit is placed.
+     * Otherwise, the user is asked to enter valid coordinates. 
+     * 
+     * @return {String[]} the complete list of coords of the unit that is being placed
+     */
 	public String[] PlaceUnitControl(){
 		String command, userInput, coord1, coord2;
         String[] unitCoords;
@@ -74,7 +81,7 @@ public class PlayerCmdController {
                         model.player.sendToClient("Rem");
                         model.player.sendToClient(""+(failCount + 1));
 						model.player.sendToClient("Q?");
-						model.player.sendToClient("U-"+unitSize);
+						model.player.sendToClient("C-");
                         model.player.sendToClient("Input not valid. Units can not overlap eachother. Please enter valid input\n");
                         failCount = 1;
                     }
@@ -83,7 +90,7 @@ public class PlayerCmdController {
                     model.player.sendToClient("Rem");
                     model.player.sendToClient(""+(failCount + 1));
 					model.player.sendToClient("Q?");
-					model.player.sendToClient("U-"+unitSize);
+					model.player.sendToClient("C-");
                     model.player.sendToClient("Input not valid. Please enter valid input\n");
                     failCount = 1;
                 }
@@ -92,7 +99,7 @@ public class PlayerCmdController {
                 model.player.sendToClient("Rem");
                 model.player.sendToClient(""+(failCount + 1));
 				model.player.sendToClient("Q?");
-				model.player.sendToClient("U-"+unitSize);
+				model.player.sendToClient("C-");
                 model.player.sendToClient("Input not valid. Please enter valid input\n");
                 failCount = 1;
             }

@@ -8,7 +8,7 @@ package view;
 import java.util.Observable;
 import java.util.Observer;
 
-import controller.PlayerCmdController;
+import controller.PlayerController;
 import model.PlayerModel;
 
 /**
@@ -16,7 +16,7 @@ import model.PlayerModel;
  */
 public class PlayerViewCmd extends PlayerView implements Observer {
 	
-	public PlayerViewCmd(PlayerModel model, PlayerCmdController controller) {
+	public PlayerViewCmd(PlayerModel model, PlayerController controller) {
 		super(model, controller);
 	}
 

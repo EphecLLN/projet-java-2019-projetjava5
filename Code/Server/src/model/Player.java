@@ -8,7 +8,7 @@ package model;
 import java.io.*;
 import java.net.*;
 
-import controller.PlayerCmdController;
+import controller.PlayerController;
 import test.*;
 import view.PlayerViewCmd;
 
@@ -31,7 +31,7 @@ import view.PlayerViewCmd;
 public class Player extends Thread {
 
     PlayerModel model;
-    PlayerCmdController playerContr;
+    PlayerController playerContr;
     PlayerViewCmd cmd;
 
     public String userName;
@@ -77,7 +77,7 @@ public class Player extends Thread {
     { 
 
         model = new PlayerModel(this);
-        playerContr = new PlayerCmdController(model);
+        playerContr = new PlayerController(model);
         cmd  = new PlayerViewCmd(model, playerContr);
         playerContr.addView(cmd);
         
@@ -189,7 +189,7 @@ public class Player extends Thread {
             }  
         }
         sendToClient("Q?");
-        sendToClient("U-");
+        sendToClient("C-");
         sendToClient("All units are placed, press 'enter' to start playing.\n");
         getFormClient();
         sendToClient("Rem");
@@ -553,7 +553,7 @@ public class Player extends Thread {
     }
 
     //!---------------------------------------------------------------------------------
-    //!                             Other methods
+    //!                              Other methods
     //!---------------------------------------------------------------------------------
 
     /**
