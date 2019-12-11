@@ -10,7 +10,7 @@ import model.*;
 import static org.junit.Assert.assertEquals;
 import org.junit.jupiter.api.Test;
 
-class UnitTest2{
+class UnitTest{
 
 	/**
 	 * Test qui permet de v�rifier la taille des unit�s
@@ -32,7 +32,7 @@ class UnitTest2{
 	@Test
 	void testGetname() {
 		Unit testUnit = new Unit("testUnit",2, 4);
-		Unit testUnit2 = new Unit("testUnit",8, 4);
+		Unit testUnit2 = new Unit("testUnit2",8, 4);
 		assertEquals("testUnit", testUnit.getName());
 		assertEquals("testUnit2", testUnit2.getName());
 	}
