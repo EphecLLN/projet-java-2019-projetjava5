@@ -217,7 +217,7 @@ public class Player extends Thread {
                 availableShotTypes += "- A ";
             }
         }
-        if(false){                // if(RadarTower.getIsAlive()){ //TODO
+        if(false){                // if(RadarTower.getIsAlive()){ 
             if(RadarTower.getStateBonus()){
                 availableShotTypes += "- D ";
             }
@@ -266,10 +266,6 @@ public class Player extends Thread {
             model.toNotify();
         }
     }
-
-
-
-    
 
 
     /**

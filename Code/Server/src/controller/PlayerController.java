@@ -12,7 +12,7 @@ import view.*;
 
 
 /**
- * This class is currently not usefull since the syntax/input control is made whitin the model. 
+ * Controller class //TODO
  * 
  */
 public class PlayerController {
