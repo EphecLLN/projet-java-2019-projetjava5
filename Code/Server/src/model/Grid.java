@@ -15,8 +15,8 @@ package model;
  */
 public class Grid {
 
-    protected final String[] rowNames = { "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M" };
-    protected final String[] colNames = { "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13" };
+    public final String[] rowNames = { "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M" };
+    public final String[] colNames = { "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13" };
 
     /**
      * Method that converts a userfriendly cell coordinate such as "H4"

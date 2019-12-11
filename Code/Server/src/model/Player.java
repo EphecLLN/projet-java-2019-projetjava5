@@ -12,8 +12,6 @@ import controller.PlayerController;
 import test.*;
 import view.PlayerViewCmd;
 
-import java.util.Arrays;
-
 /**
  * This class discribes a Player with its attributes and methods. 
  * This class is created whenever a client connects to the server and it's asociated to that client. 
@@ -33,6 +31,8 @@ import java.util.Arrays;
 public class Player extends Thread {
 
     PlayerModel model;
+    PlayerController playerContr;
+    PlayerViewCmd cmd;
 
     String userName;
     private myGrid myGrid;
@@ -60,6 +60,10 @@ public class Player extends Thread {
     public static final String CLEAR_SCREEN = "\u001B[2J";
     public static final String HOME_CURSOR  = "\u001B[H";
 
+    //!---------------------------------------------------------------------------------
+    //!                                  Constructor
+    //!---------------------------------------------------------------------------------
+
     /**
      * Constructor
      * 
@@ -74,8 +78,8 @@ public class Player extends Thread {
     { 
 
         model = new PlayerModel(this);
-        PlayerController playerContr = new PlayerController(model);
-        PlayerViewCmd cmd = new PlayerViewCmd(model, playerContr);
+        playerContr = new PlayerController(model);
+        cmd  = new PlayerViewCmd(model, playerContr);
         playerContr.addView(cmd);
         
         //Creating both grids
@@ -114,46 +118,10 @@ public class Player extends Thread {
         
     } 
 
-    /**
-     * This method prints the client information associated to this instance of the Player class on the server cmdLine
-     */
-    private void getClientInfo(){
-        long id = Thread.currentThread().getId(); 
 
-        userName = getFormClient();
-        System.out.println("A new "+ PURPLE_FG +"client"+ BLUE_FG +" \""+userName+"\""+ RESET_COLOR +" with id" + RED_FG +" ("+id+")"+
-                            RESET_COLOR +" joined via " + YELLOW_FG + sock.getLocalAddress().toString().replaceAll("/", "")+ RESET_COLOR);
-        System.out.println("-------------------------------------------------------------------------");
-    }
-
-    /**
-     * Method that returns the reference of the other client's Player instance 
-     * 
-     * @return {Player} - The object Player of the other client 
-     */
-    public Player otherPlayer(){
-        if(myKey.equals("P1")){
-            return Server.Players.get("P2");
-        }
-        else{
-            return Server.Players.get("P1");
-        }
-    }
-
-    /**
-     * Method that lets this instance sleep for X miliseconds.
-     * 
-     * @param ms {int} - the time this thread needs to sleep in miliseconds
-     */
-    private void sleep(int ms){
-        try{
-            Thread.sleep(ms);
-        }
-        catch(InterruptedException e){
-            System.out.println(e);
-            System.out.println(RED_FG+ "Thread Error, game closed!" + RESET_COLOR);
-        }
-    }
+    //!---------------------------------------------------------------------------------
+    //!                         Communication with Client
+    //!---------------------------------------------------------------------------------
 
     /**
      * Method that takes a string and tries to send it to the client.
@@ -187,6 +155,9 @@ public class Player extends Thread {
         return "";
     }
 
+    //!---------------------------------------------------------------------------------
+    //!                                Placing of units
+    //!---------------------------------------------------------------------------------
 
      /**
      * Function that asks the player to place a particular unit on the grid and saves its position.
@@ -194,80 +165,20 @@ public class Player extends Thread {
      * @param unit {Unit} - The unit that needs to be placed 
      */
     private void unitPlacer(Unit unit) {
-        String userInput, coord1, coord2;
-        String[] unitCoords;
-        int[] coord1Index, coord2Index;
-        boolean isPlaced = false;
-        int numberOfRows, numberOfCols;
-        int failCount = 0;
-
+    
         sendToClient("Q?");
+        sendToClient("U-"+unit.getSize());
         sendToClient("\nWhere do you want to place the " + unit.getName()+ "? Enter top-left and bottom-right coordinates separated by a whitespace.\n");
-
-        unitCoords = new String[unit.getSize()];
-
-        while (!isPlaced) {
-            userInput = getFormClient();
-            try {
-                coord1 = userInput.split(" ")[0]; //retreives the top-left coordinate
-                coord2 = userInput.split(" ")[1]; //retreives the bottom-rigth coordinate
-                coord1Index = myGrid.getCoordIndex(coord1);
-                coord2Index = myGrid.getCoordIndex(coord2);
-                numberOfRows = coord2Index[0] - coord1Index[0] + 1;
-                numberOfCols = coord2Index[1] - coord1Index[1] + 1;
-                // check if input is correct and add if place is empty:
-                int k = 0;
-                if (numberOfRows * numberOfCols == unit.getSize()) {
-                    for (int i = 0; i < numberOfRows; i++) {
-                        for (int j = 0; j < numberOfCols; j++) {
-                            unitCoords[k] = myGrid.rowNames[coord1Index[0] + i] + myGrid.colNames[coord1Index[1] + j];
-                            k++;
-                        }
-                    }
-                    for (int i = 0; i < unitCoords.length; i++) {
-                        if (myGrid.getGridCell(unitCoords[i]) != null) {
-                            isPlaced = false;
-                            break;
-                        } else {
-                            isPlaced = true;
-                        }
-                    }
-
-                    if (isPlaced) {
-                        unit.initCoordState(unitCoords);
-                        sendToClient("Rem");
-                        sendToClient("3");
-                        for (int i = 0; i < unitCoords.length; i++) {
-                            myGrid.setGridCell(unitCoords[i], unit);
-                            model.Changed();
-                            model.toNotify();
-                        }
-                    } else {
-                        sendToClient("Rem");
-                        sendToClient(""+(failCount + 1));
-                        sendToClient("Q?");
-                        sendToClient("Input not valid. Units can not overlap eachother. Please enter valid input\n");
-                        failCount = 1;
-                    }
-                } else {
-                    isPlaced = false;
-                    sendToClient("Rem");
-                    sendToClient(""+(failCount + 1));
-                    sendToClient("Q?");
-                    sendToClient("Input not valid. Please enter valid input\n");
-                    failCount = 1;
-                }
-            } catch (Exception e) {
-                isPlaced = false;
-                sendToClient("Rem");
-                sendToClient(""+(failCount + 1));
-                sendToClient("Q?");
-                sendToClient("Input not valid. Please enter valid input\n");
-                failCount = 1;
-            }
+        String[] unitCoords = playerContr.PlaceUnitControl();
+        
+        unit.initCoordState(unitCoords);
+        for (int i = 0; i < unitCoords.length; i++) {
+            myGrid.setGridCell(unitCoords[i], unit);
+            model.Changed();
+            model.toNotify();
         }
+        
     }
-
 
     /**
      * Method that iterates through every unit of the player and sends it to the unitPlacer-method.
@@ -280,6 +191,7 @@ public class Player extends Thread {
             }  
         }
         sendToClient("Q?");
+        sendToClient("C-");
         sendToClient("All units are placed, press 'enter' to start playing.\n");
         getFormClient();
         sendToClient("Rem");
@@ -287,6 +199,9 @@ public class Player extends Thread {
         isReady = true;
     }
 
+    //!---------------------------------------------------------------------------------
+    //!                                 Shooting
+    //!---------------------------------------------------------------------------------
 
     /**
      * Method thet checks which sot-types are available for the player to use,
@@ -354,105 +269,7 @@ public class Player extends Thread {
 
 
 
-    /**
-     * Method that ask the client a gicen question and checks if the input is 
-     * valid depending on the shotType.
-     * 
-     * @param question {String} - The question that needs to be asked the client
-     * @param shotType {String} - The type of shot that is currently used
-     * @return {String} - The validated coordinate(s) (if more than 1, separated by ';')  
-     */
-    protected String askForCoord(String question,String shotType){
-        boolean controlPassed = false;
-        sendToClient("Rem"); sendToClient("3");
-        sendToClient("Q?");
-        sendToClient(question);
-        String shotCoord = getFormClient();
-        int[] coord;
     
-        while(!controlPassed){
-            switch(shotType){
-                case "S":
-                    coord = myGrid.getCoordIndex(shotCoord);
-                    if(coord[0] >= 0 && coord[1] >= 0){ //Coord is in range
-                        controlPassed = true;
-                    }
-                    else{
-                        sendToClient("Q?");
-                        sendToClient("Coordinate out of range, please enter correct coordinate:\n");
-                        shotCoord = getFormClient();
-                        sendToClient("Rem"); sendToClient("2");
-                    }
-                    break;
-
-                case "A":
-                    coord = myGrid.getCoordIndex(shotCoord);
-                    if(coord[0] >= 0 && coord[1] >= 0){  
-                        sendToClient("Q?");
-                        sendToClient("Enter the direction of the airstrike. H : Horizontal;  any other key : Vertical \n");
-                        String direction = getFormClient();
-                        sendToClient("Rem"); sendToClient("2");
-                        shotCoord ="";
-                        for(int i=-3;i<4;i++){
-                            if(direction.equals("H")) {
-                                try{
-                                    shotCoord += myGrid.rowNames[coord[0]]+myGrid.colNames[coord[1]+i]+";";
-                                }
-                                catch(IndexOutOfBoundsException e){
-                                    //Some of the shots will be outside of the grid (doesn't matter)
-                                }
-                            }
-                            else {
-                                try{
-                                    shotCoord += myGrid.rowNames[coord[0]+i]+myGrid.colNames[coord[1]]+";";
-                                }
-                                catch(IndexOutOfBoundsException e){
-                                    //Some of the shots will be outside of the grid (doesn't matter)
-                                }       
-                            }
-                        }
-                        controlPassed = true;
-                    }
-                    else{
-                        sendToClient("Q?");
-                        sendToClient("Coordinate out of range, please enter correct coordinate:\n");
-                        shotCoord = getFormClient();
-                        sendToClient("Rem"); sendToClient("2");
-                    }
-                    break;
-
-                case "D":
-                    break;
-
-                case "B":
-                    coord = myGrid.getCoordIndex(shotCoord);
-                    if(coord[0] >= 0 && coord[1] >= 0){ //Coord is in range
-                        shotCoord ="";
-                        for(int i =-1; i<2;i++){
-                            for(int j =-1; j<2;j++){
-                                try{
-                                    shotCoord += myGrid.rowNames[coord[0]+i]+myGrid.colNames[coord[1]+j]+";";
-                                }
-                                catch(IndexOutOfBoundsException e){
-                                    //Some of the shots will be outside of the grid (doesn't matter)
-                                }  
-                            }
-                        }
-                        controlPassed = true;
-                    }
-                    else{
-                        sendToClient("Q?");
-                        sendToClient("Coordinate out of range, please enter correct coordinate:\n");
-                        shotCoord = getFormClient();
-                        sendToClient("Rem"); sendToClient("2");
-                    }
-                    break;
-            }
-        }
-
-        sendToClient("Rem"); sendToClient("2");
-        return shotCoord;
-    }
 
 
     /**
@@ -467,6 +284,7 @@ public class Player extends Thread {
         int failCount = 0;
 
         sendToClient("Q?");
+        sendToClient("C-");
         sendToClient("What type of shot do you want to use?     Available: "+ getAvailableShotTypes() +"\n"+
         "S : Singleshot; A : Airstrike; D : Radar discovery; B : Bigshot; R : Rocketstrike\n");
         shotType = getFormClient();
@@ -475,12 +293,12 @@ public class Player extends Thread {
             if(getAvailableShotTypes().contains(shotType)){
                 switch (shotType) {
                     case "S":
-                        checkForHit(askForCoord("Enter the coordinate of the shot. Ex: H4 \n",shotType));
+                        checkForHit(playerContr.askForCoord("Enter the coordinate of the shot. Ex: H4 \n",shotType));
                         shotExecuted = true;
                         break;
         
                     case "A":
-                        coords = askForCoord("Enter the coordinate of the center of the airstrike. Ex: H4 \n",shotType);
+                        coords = playerContr.askForCoord("Enter the coordinate of the center of the airstrike. Ex: H4 \n",shotType);
                         coordsArray = coords.split(";");
                         for(String coord : coordsArray){
                             checkForHit(coord);
@@ -491,13 +309,13 @@ public class Player extends Thread {
                         break;
         
                     case "D":
-                        //TODO -> pas urgent! 
+                        /////TODO => Will not be implemented
                         shotExecuted = true;
                         RadarTower.setSwitchStateBonus();               
                         break;
         
                     case "B":
-                        coords = askForCoord("Enter the coordinate of the central shot. Ex: H4 \n",shotType);
+                        coords = playerContr.askForCoord("Enter the coordinate of the central shot. Ex: H4 \n",shotType);
                         coordsArray = coords.split(";");
                         for(String coord : coordsArray){
                             checkForHit(coord);
@@ -524,12 +342,14 @@ public class Player extends Thread {
                 if(types.contains(shotType)){
                     sendToClient("Rem"); sendToClient(""+(failCount + 2));
                     sendToClient("Q?");
+                    sendToClient("C-");
                     sendToClient("The shot-type you entered is not available. Use another one.\n");
                     shotType = getFormClient();
                 }
                 else{
                     sendToClient("Rem"); sendToClient(""+(failCount + 2));
                     sendToClient("Q?");
+                    sendToClient("C-");
                     sendToClient("Invalid input. Please enter valid shot-type.\n");
                     shotType = getFormClient();
                 }
@@ -565,13 +385,17 @@ public class Player extends Thread {
         }
     }
 
+    //!---------------------------------------------------------------------------------
+    //!                                    Playing  
+    //!---------------------------------------------------------------------------------
+
     /**
      * This Method is the actual game-management,
      * The truns are being handed and the active-player is alowed to shoot.
      * 
      * Be aware -> this is method starts an infinite loop that can only be stopped if one of the players wins!
      * 
-     * //TODO -> check if a player disconnects
+     * //TODO -> check if a player disconnects => will not be impemented 
      */
     protected void play(){
         while(true){
@@ -614,7 +438,21 @@ public class Player extends Thread {
     }
 
     
-    //// Getters and setters : 
+    //!---------------------------------------------------------------------------------
+    //!                               Getters & Setters
+    //!---------------------------------------------------------------------------------
+
+    /**
+     * This method prints the client information associated to this instance of the Player class on the server cmdLine
+     */
+    private void getClientInfo(){
+        long id = Thread.currentThread().getId(); 
+
+        userName = getFormClient();
+        System.out.println("A new "+ PURPLE_FG +"client"+ BLUE_FG +" \""+userName+"\""+ RESET_COLOR +" with id" + RED_FG +" ("+id+")"+
+                            RESET_COLOR +" joined via " + YELLOW_FG + sock.getLocalAddress().toString().replaceAll("/", "")+ RESET_COLOR);
+        System.out.println("-------------------------------------------------------------------------");
+    }
 
     /**
      * Method tht returns the myGrid instance
@@ -632,6 +470,39 @@ public class Player extends Thread {
      */
     public enemyGrid getEnemyGrid(){
         return enemyGrid;
+    }
+
+    //!---------------------------------------------------------------------------------
+    //!                              Other methods
+    //!---------------------------------------------------------------------------------
+
+    /**
+     * Method that returns the reference of the other client's Player instance 
+     * 
+     * @return {Player} - The object Player of the other client 
+     */
+    public Player otherPlayer(){
+        if(myKey.equals("P1")){
+            return Server.Players.get("P2");
+        }
+        else{
+            return Server.Players.get("P1");
+        }
+    }
+
+    /**
+     * Method that lets this instance sleep for X miliseconds.
+     * 
+     * @param ms {int} - the time this thread needs to sleep in miliseconds
+     */
+    private void sleep(int ms){
+        try{
+            Thread.sleep(ms);
+        }
+        catch(InterruptedException e){
+            System.out.println(e);
+            System.out.println(RED_FG+ "Thread Error, game closed!" + RESET_COLOR);
+        }
     }
 
 
