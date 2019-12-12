@@ -1,0 +1,6 @@
+#!/bin/bash
+clear
+echo Starting GUI...in 3 secs
+javac gui/*.java
+java gui/Gui
+clear
