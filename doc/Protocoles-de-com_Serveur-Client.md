@@ -28,7 +28,7 @@ M -> C : Q? <br>
 M -> C : S-[SHot type] <br>
 M -> C : [Request] <br>
 
-
+//TODO
 
 
 #### Communication sans commande spécifique mais demande de confirmation: 
