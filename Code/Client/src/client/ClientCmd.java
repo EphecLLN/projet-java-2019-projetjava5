@@ -12,7 +12,7 @@ import java.util.Scanner;
 /**
  * //TODO
  */
-public class Client  { 
+public class ClientCmd  { 
 
     private String name;
     private Scanner scn;
@@ -38,7 +38,7 @@ public class Client  {
      * Constructor
      * 
      */
-    public Client(){
+    public ClientCmd(){
         scn = new Scanner(System.in); 
     }
 	
@@ -222,7 +222,7 @@ public class Client  {
     }
     public static void main(String[] args){
     	try {
-    		Client client = new Client();
+    		ClientCmd client = new ClientCmd();
             client.InitConnection();
             client.listenToServer();
     	}
