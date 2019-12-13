@@ -25,9 +25,9 @@ class UnitTest{
 	}
 	
 	/**
-	 * Test qui permet de v�rifier le nom des unit�s
-	 * Valeur attendue pour "GetName":
-	 * ==> Le nom de l'unit�
+	* Test that verifies the name of the units
+	* Expected value for "GetName":
+	* ==> The name of the unit
 	 * */
 	@Test
 	void testGetname() {
@@ -38,9 +38,9 @@ class UnitTest{
 	}
 	
 	/**
-	 * Test qui permet de v�rifier si les cases d'un unit� sont � "true"
-	 * Valeur attendue pour "GetCoordState"
-	 * ==> true = case en vie
+	* Test which allows to check if the boxes of a unit are "true"
+	* Expected value for "GetCoordState"
+	* ==> true = case alive
 	 * */
 	@Test
 	void testGetCoordState() {
@@ -52,9 +52,9 @@ class UnitTest{
 	}
 	
 	/**
-	 * Test qui permet de v�rifier si "les cases" d'une unit� ont bien �t� initi�es a "true"
-	 * Valeur attendue pour "initCoordState":
-	 * ==> true = case en vie
+	* Test to check if "boxes" of a unit have been initiated to "true"
+	* Expected value for "initCoordState":
+	* ==> true = case alive
 	 * */
 	@Test
 	void testinitCoordState() {
@@ -68,9 +68,9 @@ class UnitTest{
 	}
 	
 	/**
-	 * Test qui permet de v�rifier la fonction "setCoordState" a bien mis une case � "false"
-	 *Valeur attendue pour "setCoordState":
-	 * ==> false = case d�truite
+	* Test which allows to check the "setCoordState" function has put a box at "false"
+	* Expected value for "setCoordState":
+	* ==> false = box destroyed
 	 * */
 	@Test
 	void testsetCoordState() {
@@ -85,10 +85,10 @@ class UnitTest{
         }
 	
 	/**
-	 * Teste qui permet de voir si une unit� est toujours en vie ou d�truite
-	 * Valeur attendue pour "getIsAlive" :
-	 * ==> true = En vie
-	 * ==> false = D�truite
+	* Test to check if a unit is still alive or destroyed
+	* Expected value for "getIsAlive":
+	* ==> true = Alive
+	* ==> false = Destroyed
 	 * */
 	@Test
 	void testGetIsAlive() {
