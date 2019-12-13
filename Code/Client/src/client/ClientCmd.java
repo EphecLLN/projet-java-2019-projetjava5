@@ -12,24 +12,18 @@ import java.util.Scanner;
 /**
  * //TODO
  */
-public class ClientCmd  { 
+public class ClientCmd extends Client { 
 
-    private String name;
     private Scanner scn;
-    private int port;
-    private String ip;
-    private Socket sock;
-    protected DataInputStream in;
-    protected DataOutputStream out;
 
     private CmdGridDisplay gridDisplay = new CmdGridDisplay();
 
     //Escape characters tho control the cmdline display. => ! only works on unix systems !
     public static final String RED_FG       = "\u001B[31m";
     public static final String GREEN_FG     = "\u001B[32m";
-	public static final String BLUE_FG      = "\u001B[34m";
-	public static final String PURPLE_FG    = "\u001B[35m";
-	public static final String YELLOW_FG    = "\u001B[33m";
+    public static final String BLUE_FG      = "\u001B[34m";
+    public static final String PURPLE_FG    = "\u001B[35m";
+    public static final String YELLOW_FG    = "\u001B[33m";
     public static final String RESET_COLOR  = "\u001B[0m";
     public static final String CLEAR_SCREEN = "\u001B[2J";
     public static final String HOME_CURSOR  = "\u001B[H";
@@ -83,8 +77,8 @@ public class ClientCmd  {
 
         //Retrieving ip adress from user input :
         System.out.println(RED_FG+"IP address ? (nothing + enter = localhost)"+RESET_COLOR);
-        ip = scn.nextLine();
-        if (ip.length()==0) {ip = "localhost";}
+        super.ip = scn.nextLine();
+        if (super.ip.length()==0) {ip = "localhost";}
         System.out.println(BLUE_FG+name+"> "+RED_FG+ip+RESET_COLOR);
 
         try{
@@ -104,34 +98,6 @@ public class ClientCmd  {
         catch(Exception e){}
     }
     
-    /**
-     * Method that takes a string and tries to send it to the server.
-     * 
-     * @param str {String} - A String to send to the server 
-     */
-    private void sendToServer(String str){
-        try{
-            out.writeUTF(str);
-        }
-        catch(IOException e){
-            //TODO
-        }
-    }
-
-    /**
-     * Method that waits for string from the server and returns it when received. 
-     * 
-     * @return a string received from the server
-     */
-    private String getFromServer(){
-        try{
-            return in.readUTF();
-        }
-        catch(IOException e){
-            //TODO
-        }
-        return "";
-    }
 
 
     /**
