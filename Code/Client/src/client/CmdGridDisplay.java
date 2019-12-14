@@ -101,7 +101,9 @@ public class CmdGridDisplay {
 		System.out.print(SAVE_CURSOR); // Save cursor position
 	}
 
-	protected void insertInGrid(String val, String coord, boolean isOutGoing) {
+	protected void insertInGrid(String val, String data, boolean isOutGoing) {
+		String coord = data.split("/")[0];
+		
 		int rowIndex = grid.getCoordIndex(coord)[0];
 		int colIndex = grid.getCoordIndex(coord)[1];
 		int gridSelect = 0;
