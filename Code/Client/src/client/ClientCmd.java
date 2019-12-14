@@ -27,15 +27,23 @@ public class ClientCmd extends Client {
     public static final String RESET_COLOR  = "\u001B[0m";
     public static final String CLEAR_SCREEN = "\u001B[2J";
     public static final String HOME_CURSOR  = "\u001B[H";
+
+    // !---------------------------------------------------------------------------------
+    // !                                  Constructor
+    // !---------------------------------------------------------------------------------
     
      /**
      * Constructor
-     * 
      */
     public ClientCmd(){
         scn = new Scanner(System.in); 
     }
-	
+    
+    
+    //!---------------------------------------------------------------------------------
+    //!                          Initialize Cleint <-> Server Connection 
+    //!---------------------------------------------------------------------------------
+
     /**
      * Method that checks if name (input from user) is between 4 and 12 chracters in length
      * @param name {String} - //TODO
@@ -98,94 +106,154 @@ public class ClientCmd extends Client {
         catch(Exception e){}
     }
     
-
+    //!---------------------------------------------------------------------------------
+    //!                          Cleint <-> Server Communication 
+    //!---------------------------------------------------------------------------------
 
     /**
-     * //TODO
+     * Method that gets and processes the queries from the server.
      */
     private void listenToServer(){
-        String strFromServer ="";
+        String[] queryFromServer;
+        String command = "";
+        String comment = "";
         String strToServer ="";
 
         while (true)  { 
-            strFromServer = getFromServer(); 
-            switch(strFromServer){
+
+            queryFromServer = getFromServer().split("-"); 
+            command = queryFromServer[0];
+            switch(command){
+                case "U":   //Placing of units -> queryFromServer format : U-<unitName>-<unitSize>-<Comment>
+                    String unitName = queryFromServer[1];
+                    comment = queryFromServer[3];
+                    System.out.print("\nWhere do you want to place the " + unitName + "? Enter top-left and bottom-right coordinates separated by a whitespace.\n");
+                    if(!comment.equals("NC")){
+                        System.out.print(comment);
+                    }
+                    sendToServer("U-"+unitName+"-"+queryFromServer[2]);
+                    strToServer = scn.nextLine();
+                    sendToServer(strToServer);
+                    break;
+                
+                case "S": //Shooting -> queryFromServer format : S-<commandType>-<data>-<Comment>
+                    String commandType = queryFromServer[1];
+                    comment = queryFromServer[3];
+                    switch(commandType){
+                        case "T":   //shot Type
+                            String availableShotTypes = queryFromServer[2];
+                            System.out.print("What type of shot do you want to use?     Available: "+ availableShotTypes +"\n"+
+                            "S : Singleshot; A : Airstrike; D : Radar discovery; B : Bigshot; R : Rocketstrike\n");
+                            if(!comment.equals("NC")){
+                                System.out.print(comment);
+                            }
+                            strToServer = scn.nextLine();
+                            sendToServer(strToServer);
+                            break;
+                        
+                        case "C":   //shot center Coord
+                            System.out.print("Enter the coordinate of the center of the shot. Ex: H4 \n");
+                            if(!comment.equals("NC")){
+                                System.out.print(comment);
+                            }
+                            strToServer = scn.nextLine();
+                            sendToServer(strToServer);
+                            break;
+
+                        case "D":   //direction
+                            System.out.print("Enter the direction of the airstrike. H : Horizontal;  any other key : Vertical \n");
+                            if(!comment.equals("NC")){
+                                System.out.print(comment);
+                            }
+                            strToServer = scn.nextLine();
+                            sendToServer(strToServer);
+                            break;
+                    }
+                    break;
+
+                case "I": //Comment with input from client
+                    comment = queryFromServer[1];
+                    System.out.print(comment);
+                    strToServer = scn.nextLine();
+                    sendToServer(strToServer);
+                    break;
+
+                case "C": //Comment without input from client
+                    comment = queryFromServer[1];
+                    System.out.print(comment);
+                    break;
+
+
                 case "displayGrid":
                     System.out.print("disp"); 
                     gridDisplay.displayGrid();
                     break;
-                    
-                case "Q?": //Server ask a question
-                    String command = getFromServer();
-                    if(command.split("-")[0].equals("U")){
-                        System.out.print(getFromServer()); //print the question 
-                        sendToServer(command);
-                        strToServer = scn.nextLine();
-                        sendToServer(strToServer);
-                    }
-                    else if(command.split("-")[0].equals("S")){
-                        System.out.print(getFromServer()); //print the question 
-                        sendToServer(command);
-                        strToServer = scn.nextLine();
-                        sendToServer(strToServer);
-                    }
-                    else if(command.split("-")[0].equals("C")){
-                        System.out.print(getFromServer()); //print the question 
-                        strToServer = scn.nextLine();
-                        sendToServer(strToServer);
-                    }
-                    break;
 
                 case "insertUnit":
-                    strFromServer = getFromServer();
-                    gridDisplay.insertInGrid("Unit", strFromServer, false);
+                command = getFromServer();
+                    gridDisplay.insertInGrid("Unit", command, false);
                     break;
                 
                 case "Hit": 
-                    strFromServer = getFromServer();
-                    gridDisplay.insertInGrid("Hit", strFromServer, true);
+                    command = getFromServer();
+                    gridDisplay.insertInGrid("Hit", command, true);
                     break;
 
                 case "noHit":
-                    strFromServer = getFromServer();
-                    gridDisplay.insertInGrid("noHit", strFromServer, true);
+                    command = getFromServer();
+                    gridDisplay.insertInGrid("noHit", command, true);
                     break;
                 
                 case "Destroyed":
-                    strFromServer = getFromServer();
-                    gridDisplay.insertInGrid("Destroyed", strFromServer, true);
+                    command = getFromServer();
+                    gridDisplay.insertInGrid("Destroyed", command, true);
                     break;
                 
                 case "myDestroyed":
-                    strFromServer = getFromServer();
-                    gridDisplay.insertInGrid("Destroyed", strFromServer, false);
+                    command = getFromServer();
+                    gridDisplay.insertInGrid("Destroyed", command, false);
                     break;
                 
                 case "myHit": 
-                    strFromServer = getFromServer();
-                    gridDisplay.insertInGrid("Hit", strFromServer, false);
+                    command = getFromServer();
+                    gridDisplay.insertInGrid("Hit", command, false);
                     break;
 
                 case "myNoHit":
-                    strFromServer = getFromServer();
-                    gridDisplay.insertInGrid("noHit", strFromServer, false);
+                    command = getFromServer();
+                    gridDisplay.insertInGrid("noHit", command, false);
                     break;
 
                 case "Rem": //remove lines
-                    strFromServer = getFromServer();
-                    gridDisplay.removeLines(Integer.parseInt(strFromServer));
+                    command = getFromServer();
+                    gridDisplay.removeLines(Integer.parseInt(command));
+                    break;
+                    
+                case "WON":
+                    System.out.print(GREEN_FG + "\n    YOU WON!    \n\n"+ RESET_COLOR);
+                    System.exit(0);
+                    break;
+                
+                case "LOST":
+                    System.out.print(RED_FG + "\n    YOU LOST!    \n\n"+ RESET_COLOR);
+                    System.exit(0);
                     break;
 
-                case "CLOSE": //remove lines
+                case "CLOSE":
                     System.exit(0);
                     break;
 
                 default:
-                    System.out.print(strFromServer);
+                    System.out.print(command); //TODO
             }
         }
 
     }
+
+
+    //!---------------------------------------------------------------------------------
+    //!                                       MAIN
+    //!---------------------------------------------------------------------------------
     public static void main(String[] args){
     	try {
     		ClientCmd client = new ClientCmd();

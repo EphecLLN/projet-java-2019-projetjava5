@@ -111,7 +111,6 @@ public class Server  {
             }
             servSock = new ServerSocket(port);                          //Creating a new serverSocket with port given by user. 
 
-            InetAddress inetAddress = InetAddress.getLocalHost();       //Get IP-address of server => not working properly on Linux //TODO
             clearScreen();
             System.out.println(GREEN_FG+"Server started!\n"+RESET_COLOR);
             System.out.println("Players can connect whit the following information: ");
@@ -152,14 +151,14 @@ public class Server  {
             }
         }
         catch (IOException e){ 
-            //TODO
+            System.out.println(e);
         }
     	catch(InputMismatchException a) {
         	System.out.println(RED_FG + "FATAL ERROR :" + PURPLE_FG +" IP and Port must be Integer" + RESET_COLOR);
         }	 
     } 
 
-
+    
     /**
      * Run main to start the server
      */

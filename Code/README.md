@@ -14,7 +14,7 @@ Be sure to have at least [Java JDK 13](https://www.oracle.com/technetwork/java/j
 #### Starting client:
 1. Open your favorite terminal
 2. Navigate to the Client/src folder
-3. Type: ./ClientLauncher.sh -> enter 
+3. Type: ./ClientCMDLauncher.sh OR ./ClientGUILauncher.sh -> enter 
 4. Follow on-screen instructions 
 
 ### Windows systems 
@@ -37,7 +37,7 @@ Be sure to have at least [Java JDK 13](https://www.oracle.com/technetwork/java/j
 #### Starting client:
 1. Navigate to the Client/src folder
 2. Right-click -> Open Git Bash terminal here 
-3. Type: ./ClientLauncher.sh -> enter 
+3. Type: ./ClientCMDLauncher.sh OR ./ClientGUILauncher.sh -> enter 
 4. Follow on-screen instructions 
 
 
