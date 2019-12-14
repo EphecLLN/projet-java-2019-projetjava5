@@ -48,7 +48,6 @@ public class Player extends Thread {
     private DataInputStream in; 
     private DataOutputStream out; 
     private Socket sock; 
-    private static int numberOfClientsConnected=0;
 
     //Escape characters tho control the cmdline display. => ! only works on unix systems !
     public static final String RED_FG       = "\u001B[31m";
@@ -104,7 +103,6 @@ public class Player extends Thread {
         this.sock = sock;
         this.in = in; 
         this.out = out;
-        numberOfClientsConnected++;
 
         //Get own identifier 
         if(Server.Players.get("P1") == null){
@@ -166,9 +164,7 @@ public class Player extends Thread {
      */
     private void unitPlacer(Unit unit) {
     
-        sendToClient("Q?");
-        sendToClient("U-"+unit.getSize());
-        sendToClient("\nWhere do you want to place the " + unit.getName()+ "? Enter top-left and bottom-right coordinates separated by a whitespace.\n");
+        sendToClient("U-"+unit.getName()+"-"+unit.getSize()+"-NC");
         String[] unitCoords = playerContr.PlaceUnitControl();
         
         unit.initCoordState(unitCoords);
@@ -190,9 +186,7 @@ public class Player extends Thread {
                 unitPlacer(u);
             }  
         }
-        sendToClient("Q?");
-        sendToClient("C-");
-        sendToClient("All units are placed, press 'enter' to start playing.\n");
+        sendToClient("I-All units are placed, press 'enter' to start playing.\n");
         getFormClient();
         sendToClient("Rem");
         sendToClient("2");
@@ -208,28 +202,28 @@ public class Player extends Thread {
      * if a unit is destroyed or if it is too soon to re-use a certain shot-type, the shot is not available.
      * 
      * @return {String} - Returns a string containing the letters associated to the shot-types if they are available 
-     * //TODO -> Implement shoot limtit 
+     * //-> Implement shoot limtit 
      */
     protected String getAvailableShotTypes(){
         String availableShotTypes = "S ";
         if(Airport.getIsAlive()){
             if(Airport.getStateBonus()){
-                availableShotTypes += "- A ";
+                availableShotTypes += "/ A ";
             }
         }
         if(false){                // if(RadarTower.getIsAlive()){ 
             if(RadarTower.getStateBonus()){
-                availableShotTypes += "- D ";
+                availableShotTypes += "/ D ";
             }
         }
         if(RailwayGun.getIsAlive()){
             if(RailwayGun.getStateBonus()){
-                availableShotTypes += "- B ";
+                availableShotTypes += "/ B ";
             }
         }
         if(MMRL.getIsAlive()){
             if(MMRL.getStateBonus()){
-                availableShotTypes += "- R ";
+                availableShotTypes += "/ R ";
             }
         }
         return availableShotTypes;
@@ -279,22 +273,23 @@ public class Player extends Thread {
         boolean shotExecuted = false;
         int failCount = 0;
 
-        sendToClient("Q?");
-        sendToClient("C-");
-        sendToClient("What type of shot do you want to use?     Available: "+ getAvailableShotTypes() +"\n"+
-        "S : Singleshot; A : Airstrike; D : Radar discovery; B : Bigshot; R : Rocketstrike\n");
+        sendToClient("S-T-"+getAvailableShotTypes()+"-NC");
         shotType = getFormClient();
         
         while(!shotExecuted){
             if(getAvailableShotTypes().contains(shotType)){
                 switch (shotType) {
                     case "S":
-                        checkForHit(playerContr.askForCoord("Enter the coordinate of the shot. Ex: H4 \n",shotType));
+                        sendToClient("Rem"); sendToClient("3");
+                        sendToClient("S-C-ND-NC");
+                        checkForHit(playerContr.askForCoord(shotType));
                         shotExecuted = true;
                         break;
         
                     case "A":
-                        coords = playerContr.askForCoord("Enter the coordinate of the center of the airstrike. Ex: H4 \n",shotType);
+                        sendToClient("Rem"); sendToClient("3");
+                        sendToClient("S-C-ND-NC");
+                        coords = playerContr.askForCoord(shotType);
                         coordsArray = coords.split(";");
                         for(String coord : coordsArray){
                             checkForHit(coord);
@@ -305,13 +300,15 @@ public class Player extends Thread {
                         break;
         
                     case "D":
-                        /////TODO => Will not be implemented
+                        ///// => Will not be implemented
                         shotExecuted = true;
                         RadarTower.setSwitchStateBonus();               
                         break;
         
                     case "B":
-                        coords = playerContr.askForCoord("Enter the coordinate of the central shot. Ex: H4 \n",shotType);
+                        sendToClient("Rem"); sendToClient("3");
+                        sendToClient("S-C-ND-NC");
+                        coords = playerContr.askForCoord(shotType);
                         coordsArray = coords.split(";");
                         for(String coord : coordsArray){
                             checkForHit(coord);
@@ -336,18 +333,16 @@ public class Player extends Thread {
             else{
                 String types = "S A D B R";
                 if(types.contains(shotType)){
-                    sendToClient("Rem"); sendToClient(""+(failCount + 2));
-                    sendToClient("Q?");
-                    sendToClient("C-");
-                    sendToClient("The shot-type you entered is not available. Use another one.\n");
+                    sendToClient("Rem"); sendToClient("3");
+                    sendToClient("S-T-"+getAvailableShotTypes()+"-The shot type you entered is not available. Use another one.\n");
                     shotType = getFormClient();
+                    sendToClient("Rem"); sendToClient("1");
                 }
                 else{
-                    sendToClient("Rem"); sendToClient(""+(failCount + 2));
-                    sendToClient("Q?");
-                    sendToClient("C-");
-                    sendToClient("Invalid input. Please enter valid shot-type.\n");
+                    sendToClient("Rem"); sendToClient("3");
+                    sendToClient("S-T-"+getAvailableShotTypes()+"-Invalid input. Please enter valid shot type.\n");
                     shotType = getFormClient();
+                    sendToClient("Rem"); sendToClient("1");
                 }
                 failCount = 1;
             }
@@ -373,64 +368,10 @@ public class Player extends Thread {
             }
         }
         if(won){
-            sendToClient(GREEN_FG + "\n    YOU WON!    \n\n"+ RESET_COLOR);
-            sendToClient("CLOSE");
-            otherPlayer().sendToClient(RED_FG + "\n    YOU LOST!    \n\n"+ RESET_COLOR);
-            otherPlayer().sendToClient("CLOSE");
+            sendToClient("WON");
+            otherPlayer().sendToClient("LOST");
             System.exit(0);
         }
-    }
-
-    //!---------------------------------------------------------------------------------
-    //!                                    Playing  
-    //!---------------------------------------------------------------------------------
-
-    /**
-     * This Method is the actual game-management,
-     * The truns are being handed and the active-player is alowed to shoot.
-     * 
-     * Be aware -> this is method starts an infinite loop that can only be stopped if one of the players wins!
-     * 
-     * //TODO -> check if a player disconnects => will not be impemented 
-     */
-    protected void play(){
-        while(true){
-            if(isMyTurn){
-                otherPlayer().sendToClient("It's not your turn, waiting for "+ this.userName +" to play.");
-                shoot();
-                otherPlayer().sendToClient("\u001B[2K");
-                otherPlayer().sendToClient("\u001B8");
-                checkForWin();
-                this.isMyTurn = false;
-                otherPlayer().isMyTurn = true;
-            }
-            else{
-                sleep(100);
-            }
-        }
-    }
-
-    /**
-     * Method that is called on the start command from the server, 
-     * this method launches the game in four phases:
-     * 
-     *  1) Initialisation of the UI 
-     *  2) Initialisation -> let the client place his units on the grid
-     *  3) Waits until both clients are ready to battle 
-     *  4) Start the actual game between the two clients
-     *  
-     */
-    @Override
-    public void run()  { 
-        getClientInfo();
-        sendToClient("displayGrid");
-        placeUnits();
-        sendToClient("Waiting for other player\n");
-        while(!Server.allPlayerConnected){
-            try{Thread.sleep(100);}catch(InterruptedException ex){}
-        };
-        sendToClient("Rem");sendToClient("1");
-        play();
     }
 
     
@@ -500,6 +441,59 @@ public class Player extends Thread {
             System.out.println(RED_FG+ "Thread Error, game closed!" + RESET_COLOR);
         }
     }
+
+    //!---------------------------------------------------------------------------------
+    //!                                    Playing  
+    //!---------------------------------------------------------------------------------
+
+    /**
+     * This Method is the actual game-management,
+     * The truns are being handed and the active-player is alowed to shoot.
+     * 
+     * Be aware -> this is method starts an infinite loop that can only be stopped if one of the players wins!
+     * 
+     * //-> check if a player disconnects => will not be impemented 
+     */
+    protected void play(){
+        while(true){
+            if(isMyTurn){
+                otherPlayer().sendToClient("C-It's not your turn, waiting for "+ this.userName +" to play.");
+                shoot();
+                otherPlayer().sendToClient("\u001B[2K");
+                otherPlayer().sendToClient("\u001B8");
+                checkForWin();
+                this.isMyTurn = false;
+                otherPlayer().isMyTurn = true;
+            }
+            else{
+                sleep(100);
+            }
+        }
+    }
+
+    /**
+     * Method that is called on the start command from the server, 
+     * this method launches the game in four phases:
+     * 
+     *  1) Initialisation of the UI 
+     *  2) Initialisation -> let the client place his units on the grid
+     *  3) Waits until both clients are ready to battle 
+     *  4) Start the actual game between the two clients
+     *  
+     */
+    @Override
+    public void run()  { 
+        getClientInfo();
+        sendToClient("displayGrid");
+        placeUnits();
+        sendToClient("C-Waiting for other player\n");
+        while(!Server.allPlayerConnected){
+            sleep(100);
+        };
+        sendToClient("Rem");sendToClient("1");
+        play();
+    }
+
 
 
 }

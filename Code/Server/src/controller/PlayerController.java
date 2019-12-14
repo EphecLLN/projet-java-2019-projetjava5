@@ -35,19 +35,20 @@ public class PlayerController {
      * @return {String[]} the complete list of coords of the unit that is being placed
      */
 	public String[] PlaceUnitControl(){
-		String command, userInput, coord1, coord2;
-        String[] unitCoords;
+		String unitName, userInput, coord1, coord2;
+        String[] responseFromClient, unitCoords;
         int[] coord1Index, coord2Index;
         boolean isPlaced = false;
         int numberOfRows, numberOfCols, unitSize;
         int failCount = 0;
-		
-		command = model.player.getFormClient();
-		unitSize = Integer.valueOf(command.split("-")[1]);
-		unitCoords = new String[unitSize];
 	
 		while (!isPlaced) {
+            responseFromClient = model.player.getFormClient().split("-");
+            unitName = responseFromClient[1];
+		    unitSize = Integer.valueOf(responseFromClient[2]);
+		    unitCoords = new String[unitSize];
             userInput = model.player.getFormClient();
+
             try {
                 coord1 = userInput.split(" ")[0]; //retreives the top-left coordinate
                 coord2 = userInput.split(" ")[1]; //retreives the bottom-rigth coordinate
@@ -75,36 +76,30 @@ public class PlayerController {
 
                     if (isPlaced) {
 						model.player.sendToClient("Rem");
-						model.player.sendToClient("3");
-						break;
+                        model.player.sendToClient("3");
+                        return unitCoords;
                     } else {
                         model.player.sendToClient("Rem");
-                        model.player.sendToClient(""+(failCount + 1));
-						model.player.sendToClient("Q?");
-						model.player.sendToClient("C-");
-                        model.player.sendToClient("Input not valid. Units can not overlap eachother. Please enter valid input\n");
+                        model.player.sendToClient(""+(failCount + 3));
+						model.player.sendToClient("U-"+unitName+"-"+unitSize+"-Input not valid. Units can not overlap eachother. Please enter valid input\n");
                         failCount = 1;
                     }
                 } else {
                     isPlaced = false;
                     model.player.sendToClient("Rem");
-                    model.player.sendToClient(""+(failCount + 1));
-					model.player.sendToClient("Q?");
-					model.player.sendToClient("C-");
-                    model.player.sendToClient("Input not valid. Please enter valid input\n");
+                    model.player.sendToClient(""+(failCount + 3));
+					model.player.sendToClient("U-"+unitName+"-"+unitSize+"-Input not valid. Please enter valid input\n");
                     failCount = 1;
                 }
             } catch (Exception e) {
                 isPlaced = false;
                 model.player.sendToClient("Rem");
-                model.player.sendToClient(""+(failCount + 1));
-				model.player.sendToClient("Q?");
-				model.player.sendToClient("C-");
-                model.player.sendToClient("Input not valid. Please enter valid input\n");
+                model.player.sendToClient(""+(failCount + 3));
+				model.player.sendToClient("U-"+unitName+"-"+unitSize+"-Input not valid. Please enter valid input\n");
                 failCount = 1;
             }
         }
-		return unitCoords;
+		return null;
     }
     
 
@@ -116,12 +111,8 @@ public class PlayerController {
      * @param shotType {String} - The type of shot that is currently used
      * @return {String} - The validated coordinate(s) (if more than 1, separated by ';')  
      */
-    public String askForCoord(String question,String shotType){
+    public String askForCoord(String shotType){
         boolean controlPassed = false;
-        model.player.sendToClient("Rem"); model.player.sendToClient("3");
-        model.player.sendToClient("Q?");
-        model.player.sendToClient("C-");
-        model.player.sendToClient(question);
         String shotCoord = model.player.getFormClient();
         int[] coord;
     
@@ -133,20 +124,17 @@ public class PlayerController {
                         controlPassed = true;
                     }
                     else{
-                        model.player.sendToClient("Q?");
-                        model.player.sendToClient("C-");
-                        model.player.sendToClient("Coordinate out of range, please enter correct coordinate:\n");
-                        shotCoord = model.player.getFormClient();
                         model.player.sendToClient("Rem"); model.player.sendToClient("2");
+                        model.player.sendToClient("S-C-ND-Coordinate out of range, please enter correct coordinate:\n");
+                        shotCoord = model.player.getFormClient();
+                        model.player.sendToClient("Rem"); model.player.sendToClient("1");
                     }
                     break;
 
                 case "A":
                     coord = model.player.getMyGrid().getCoordIndex(shotCoord);
                     if(coord[0] >= 0 && coord[1] >= 0){  
-                        model.player.sendToClient("Q?");
-                        model.player.sendToClient("C-");
-                        model.player.sendToClient("Enter the direction of the airstrike. H : Horizontal;  any other key : Vertical \n");
+                        model.player.sendToClient("S-D-ND-NC");
                         String direction = model.player.getFormClient();
                         model.player.sendToClient("Rem"); model.player.sendToClient("2");
                         shotCoord ="";
@@ -171,11 +159,10 @@ public class PlayerController {
                         controlPassed = true;
                     }
                     else{
-                        model.player.sendToClient("Q?");
-                        model.player.sendToClient("C-");
-                        model.player.sendToClient("Coordinate out of range, please enter correct coordinate:\n");
-                        shotCoord = model.player.getFormClient();
                         model.player.sendToClient("Rem"); model.player.sendToClient("2");
+                        model.player.sendToClient("S-C-ND-Coordinate out of range, please enter correct coordinate:\n");
+                        shotCoord = model.player.getFormClient();
+                        model.player.sendToClient("Rem"); model.player.sendToClient("1");
                     }                
                     break;
 
@@ -199,11 +186,10 @@ public class PlayerController {
                         controlPassed = true;
                     }
                     else{
-                        model.player.sendToClient("Q?");
-                        model.player.sendToClient("C-");
-                        model.player.sendToClient("Coordinate out of range, please enter correct coordinate:\n");
-                        shotCoord = model.player.getFormClient();
                         model.player.sendToClient("Rem"); model.player.sendToClient("2");
+                        model.player.sendToClient("S-C-ND-Coordinate out of range, please enter correct coordinate:\n");
+                        shotCoord = model.player.getFormClient();
+                        model.player.sendToClient("Rem"); model.player.sendToClient("1");
                     }
                     break;
             }

@@ -36,8 +36,9 @@ public class PlayerViewCmd extends PlayerView implements Observer {
         if(!model.player.isReady){
             for (String key : model.player.getMyGrid().getGridCells().keySet()) {
                 if(model.player.getMyGrid().getGridCells().get(key) != null){
+                    String unitName = model.player.getMyGrid().getGridCells().get(key).getName();
                     model.player.sendToClient("insertUnit");
-                    model.player.sendToClient(key);
+                    model.player.sendToClient(key+"/"+unitName);
                 }
             }
 
