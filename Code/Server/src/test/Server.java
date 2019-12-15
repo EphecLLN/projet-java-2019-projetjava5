@@ -1,10 +1,6 @@
-/**
- * @author Morgan Valentin
- * @date 30/10/2019
- * @source code used to understand => https://www.geeksforgeeks.org/introducing-threads-socket-programming-java/
-*/
-
 package test;
+
+//@source code used to understand => https://www.geeksforgeeks.org/introducing-threads-socket-programming-java/
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -23,7 +19,11 @@ import java.util.Scanner;
 import model.Player;
 
 /**
- * This class 
+ * This class is executable and is used to create the server on which clients can connect.
+ * 
+ * The server can only accept two clients and it waits both of them to be connected before 
+ * randomly giving the first turn to one of them.
+ *  
  */
 public class Server  { 	
     
@@ -46,6 +46,9 @@ public class Server  {
      public static final String CLEAR_SCREEN = "\u001B[2J";
      public static final String HOME_CURSOR  = "\u001B[H";
 
+    //!---------------------------------------------------------------------------------
+    //!                                 Constructor
+    //!---------------------------------------------------------------------------------
     /**
      * Constructor
      */
@@ -53,46 +56,15 @@ public class Server  {
         Players.put("P1",null);
         Players.put("P2",null);
     }
-     
-    private void getIpv4Adress() throws SocketException {
-    	 Enumeration e = NetworkInterface.getNetworkInterfaces();
-    	 while (e.hasMoreElements()) {
-    		 NetworkInterface n = (NetworkInterface) e.nextElement();
-    		 Enumeration ee = n.getInetAddresses();
-    		 while (ee.hasMoreElements()) {
-    			 InetAddress i = (InetAddress) ee.nextElement();
-    			 if (i instanceof Inet4Address) {
-    				 System.out.println("IP: "+YELLOW_FG+i.getHostAddress()+RESET_COLOR);
-    				 }
-    		 }
-    	 }
-    }
-    /**
-     * Method that clears the cmdline Screen and sets the cursor to home.
-     */
-    private void clearScreen(){
-        System.out.print(CLEAR_SCREEN);
-        System.out.print(HOME_CURSOR);  	
-    }
     
+    //!---------------------------------------------------------------------------------
+    //!                              Server initialization
+    //!---------------------------------------------------------------------------------
     /**
-     * Method that randomly gives the first turn to one of the players
-     */
-    protected void giveFirstTurn() {
-        int chance = ((int) (Math.random() * 50 + 1)) % 2;
-        if (chance == 0) {
-            Players.get("P1").isMyTurn = true;
-        } else {
-            Players.get("P2").isMyTurn = true;
-        }
-    }
-
-
-    /**
-     * Method that initialisez the server and waits for clients to connect. 
+     * Method that initialize the server and waits for clients to connect. 
      * 
      * Only 2 clients can be connected.
-     * Once bothe clients have placed their units, the server randomly choses one to be the first to shoot 
+     * Once both clients have placed their units, the server randomly choses one to be the first to shoot 
      * and let them start the game.
      * 
      */
@@ -158,7 +130,51 @@ public class Server  {
         }	 
     } 
 
-    
+    //!---------------------------------------------------------------------------------
+    //!                               Other methods
+    //!---------------------------------------------------------------------------------
+    /**
+     * Method that retrieves the IP-address of the machine on which the server is launched.
+     * 
+     * @throws SocketException 
+     */
+    private void getIpv4Adress() throws SocketException {
+        Enumeration e = NetworkInterface.getNetworkInterfaces();
+        while (e.hasMoreElements()) {
+            NetworkInterface n = (NetworkInterface) e.nextElement();
+            Enumeration ee = n.getInetAddresses();
+            while (ee.hasMoreElements()) {
+                InetAddress i = (InetAddress) ee.nextElement();
+                if (i instanceof Inet4Address) {
+                    System.out.println("IP: "+YELLOW_FG+i.getHostAddress()+RESET_COLOR);
+                    }
+            }
+        }
+   }
+   
+   /**
+    * Method that clears the cmdline Screen and sets the cursor to home.
+    */
+   private void clearScreen(){
+       System.out.print(CLEAR_SCREEN);
+       System.out.print(HOME_CURSOR);  	
+   }
+   
+   /**
+    * Method that randomly gives the first turn to one of the players
+    */
+   protected void giveFirstTurn() {
+       int chance = ((int) (Math.random() * 50 + 1)) % 2;
+       if (chance == 0) {
+           Players.get("P1").isMyTurn = true;
+       } else {
+           Players.get("P2").isMyTurn = true;
+       }
+   }
+
+    //!---------------------------------------------------------------------------------
+    //!                                    Main
+    //!---------------------------------------------------------------------------------
     /**
      * Run main to start the server
      */

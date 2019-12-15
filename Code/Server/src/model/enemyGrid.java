@@ -1,8 +1,3 @@
-/**
- * @author Martin Michotte
- * @date 12/11/2019
- */
-
 package model;
 
 import java.util.HashMap;
@@ -34,8 +29,8 @@ public class enemyGrid extends Grid {
      * and set all cell-values to 0 -> not shot
      */
     public enemyGrid() {
-        for (String rowName : super.rowNames) {
-            for (String colName : super.colNames) {
+        for (String rowName : super.getRowNames()) {
+            for (String colName : super.getColNames()) {
                 gridCells.put(rowName + colName, 0);
             }
         }

@@ -1,8 +1,3 @@
-/**
- * @author Martin Michotte
- * @date 12/11/2019
- */
-
 package junit_tests;
 
 import model.*;
@@ -11,7 +6,7 @@ import static org.junit.Assert.assertEquals;
 import org.junit.jupiter.api.Test;
 
 /**
- * 
+ * This class is used to test some of the methods of the enemyGrid class
  */
 class enemyGridTest {
 
@@ -19,7 +14,6 @@ class enemyGridTest {
         
     /**
 	 * Test method for the getgridCell() method from the enemyGrid class.
-     * 
 	 */
     @Test
     void test_getgridCell() {
@@ -47,7 +41,6 @@ class enemyGridTest {
     
 	/**
 	 * Test method for the setgridCell() method from the enemyGrid class.
-     * 
 	 */
     @Test
     void test_setGrdiCell() {

@@ -229,7 +229,8 @@ public class ClientGui extends Client {
      * @return {String} - the string corresponding to the button that was pressed
      */
     private String getButtonPressed() {
-
+        
+        shotBtnPressed = "";
         while(shotBtnPressed.equals("")){
             sleep(100);
         }

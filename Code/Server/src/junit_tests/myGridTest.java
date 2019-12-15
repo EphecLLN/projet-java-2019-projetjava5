@@ -1,8 +1,3 @@
-/**
- * @author Martin Michotte
- * @date 12/11/2019
- */
-
 package junit_tests;
 
 import model.*;
@@ -10,7 +5,9 @@ import model.*;
 import static org.junit.Assert.assertEquals;
 import org.junit.jupiter.api.Test;
 
-
+/**
+ * This class is used to test some of the methods of the myGrid class
+ */
 class myGridTest {
 
     private myGrid testmyGrid = new myGrid();

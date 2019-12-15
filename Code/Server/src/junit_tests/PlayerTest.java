@@ -1,8 +1,3 @@
-/**
- * @author Martin Michotte
- * @date 15/11/2019
- */
-
 package junit_tests;
 
 import model.*;
@@ -10,20 +5,20 @@ import test.*;
 
 import static org.junit.Assert.assertEquals;
 import org.junit.jupiter.api.Test;
+
 import java.io.*;
 import java.net.Socket;
 
 
 /**
- * 
+ * This class is used to test some of the methods of the Player class
  */
 class PlayerTest{
 
     /**
-	 * Test method for the gtestotherPlayer() method from the Player class.
+	 * Test method for the otherPlayer() method from the Player class.
 	 * 
 	 * The otherPlayer method should return the other player when called on the actual player.
-     * 
 	 */
 	@Test
 	void testotherPlayer(){

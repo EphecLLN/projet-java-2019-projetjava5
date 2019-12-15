@@ -1,18 +1,21 @@
-/**
- * @author Martin Michotte
- * @date 23/11/2019
- */
-
 package controller;
-
-import java.io.Console;
 
 import model.*;
 import view.*;
 
 
 /**
- * Controller class //TODO
+ * This class has the function of Controller in the MVC structure.
+ * 
+ * When a client sends a a crucial bit of information to the server, it goes 
+ * through this class before going to the model.
+ * 
+ * If any wrong user inputs are detected, it re-ask the client to input correct data. 
+ * The data only goes to the model if it has passed all the required checks. 
+ *  
+ * There are two main control methods:
+ * -> PlaceUnitControl: checks for correct user input when he is placing the units
+ * -> askForCoord: checks for correct user input when shooting 
  * 
  */
 public class PlayerController {
@@ -28,7 +31,7 @@ public class PlayerController {
 	}
 
     /**
-     * Method that intercepts the incomming message from the client and checks for input errors.
+     * Method that intercepts the incoming message from the client and checks for input errors.
      * If no errors are detected, the method returns the complete list of coordinates on which the unit is placed.
      * Otherwise, the user is asked to enter valid coordinates. 
      * 
@@ -50,8 +53,8 @@ public class PlayerController {
             userInput = model.player.getFormClient();
 
             try {
-                coord1 = userInput.split(" ")[0]; //retreives the top-left coordinate
-                coord2 = userInput.split(" ")[1]; //retreives the bottom-rigth coordinate
+                coord1 = userInput.split(" ")[0]; //retrieves the top-left coordinate
+                coord2 = userInput.split(" ")[1]; //retrieves the bottom-right coordinate
                 coord1Index = model.player.getMyGrid().getCoordIndex(coord1);
                 coord2Index = model.player.getMyGrid().getCoordIndex(coord2);
                 numberOfRows = coord2Index[0] - coord1Index[0] + 1;
@@ -61,7 +64,7 @@ public class PlayerController {
                 if (numberOfRows * numberOfCols == unitSize) {
                     for (int i = 0; i < numberOfRows; i++) {
                         for (int j = 0; j < numberOfCols; j++) {
-                            unitCoords[k] = model.player.getMyGrid().rowNames[coord1Index[0] + i] + model.player.getMyGrid().colNames[coord1Index[1] + j];
+                            unitCoords[k] = model.player.getMyGrid().getRowNames()[coord1Index[0] + i] + model.player.getMyGrid().getColNames()[coord1Index[1] + j];
                             k++;
                         }
                     }
@@ -81,7 +84,7 @@ public class PlayerController {
                     } else {
                         model.player.sendToClient("Rem");
                         model.player.sendToClient(""+(failCount + 3));
-						model.player.sendToClient("U-"+unitName+"-"+unitSize+"-Input not valid. Units can not overlap eachother. Please enter valid input\n");
+						model.player.sendToClient("U-"+unitName+"-"+unitSize+"-Input not valid. Units can not overlap each other. Please enter valid input\n");
                         failCount = 1;
                     }
                 } else {
@@ -104,7 +107,7 @@ public class PlayerController {
     
 
     /**
-     * Method that ask the client a gicen question and checks if the input is 
+     * Method that ask the client a given question and checks if the input is 
      * valid depending on the shotType.
      * 
      * @param question {String} - The question that needs to be asked the client
@@ -141,7 +144,7 @@ public class PlayerController {
                         for(int i=-3;i<4;i++){
                             if(direction.equals("H")) {
                                 try{
-                                    shotCoord += model.player.getMyGrid().rowNames[coord[0]]+model.player.getMyGrid().colNames[coord[1]+i]+";";
+                                    shotCoord += model.player.getMyGrid().getRowNames()[coord[0]]+model.player.getMyGrid().getColNames()[coord[1]+i]+";";
                                 }
                                 catch(IndexOutOfBoundsException e){
                                     //Some of the shots will be outside of the grid (doesn't matter)
@@ -149,7 +152,7 @@ public class PlayerController {
                             }
                             else {
                                 try{
-                                    shotCoord += model.player.getMyGrid().rowNames[coord[0]+i]+model.player.getMyGrid().colNames[coord[1]]+";";
+                                    shotCoord += model.player.getMyGrid().getRowNames()[coord[0]+i]+model.player.getMyGrid().getColNames()[coord[1]]+";";
                                 }
                                 catch(IndexOutOfBoundsException e){
                                     //Some of the shots will be outside of the grid (doesn't matter)
@@ -176,7 +179,7 @@ public class PlayerController {
                         for(int i =-1; i<2;i++){
                             for(int j =-1; j<2;j++){
                                 try{
-                                    shotCoord += model.player.getMyGrid().rowNames[coord[0]+i]+model.player.getMyGrid().colNames[coord[1]+j]+";";
+                                    shotCoord += model.player.getMyGrid().getRowNames()[coord[0]+i]+model.player.getMyGrid().getColNames()[coord[1]+j]+";";
                                 }
                                 catch(IndexOutOfBoundsException e){
                                     //Some of the shots will be outside of the grid (doesn't matter)

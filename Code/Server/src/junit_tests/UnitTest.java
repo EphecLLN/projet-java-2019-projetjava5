@@ -1,8 +1,3 @@
-/**
- * @author Martin Perdaens
- * @date 15/11/2019
- */
-
 package junit_tests;
 
 import model.*;
@@ -10,12 +5,15 @@ import model.*;
 import static org.junit.Assert.assertEquals;
 import org.junit.jupiter.api.Test;
 
+/**
+ * This class is used to test some of the methods of the Unit class
+ */
 class UnitTest{
 
 	/**
-	 * Test qui permet de v�rifier la taille des unit�s
-	 * on teste 2 unit�s qui correpondent aux 2 extremes
-	 * */
+	 * Test qui permet de vérifier la taille des unit�s
+	 * on teste 2 unit�s qui correspondent aux 2 extremes
+	 */
 	@Test
 	void testGetSize() {
 		Unit testUnit = new Unit("testUnit",2, 4);
@@ -28,7 +26,7 @@ class UnitTest{
 	* Test that verifies the name of the units
 	* Expected value for "GetName":
 	* ==> The name of the unit
-	 * */
+	*/
 	@Test
 	void testGetname() {
 		Unit testUnit = new Unit("testUnit",2, 4);
@@ -41,7 +39,7 @@ class UnitTest{
 	* Test which allows to check if the boxes of a unit are "true"
 	* Expected value for "GetCoordState"
 	* ==> true = case alive
-	 * */
+	*/
 	@Test
 	void testGetCoordState() {
 		Unit testUnit = new Unit("testUnit",4, 4);	

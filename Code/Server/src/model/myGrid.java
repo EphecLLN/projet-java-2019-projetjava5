@@ -1,8 +1,3 @@
-/**
- * @author Martin Michotte
- * @date 12/11/2019
- */
-
 package model;
 
 import java.util.HashMap;
@@ -15,10 +10,10 @@ import java.util.HashMap;
  * Each grid cell will by default be populate with a null object.
  * When the player will be placing his units, each unit will be placed in each cell it is made of. 
  * 
- * Example: an Airport unit (wich is 2x4 cells) is placed in cells : 
+ * Example: an Airport unit (which is 2x4 cells) is placed in cells : 
  * B3 B4 B5 B6
  * C3 C4 C5 C6 
- * Each of these cells will containt the Airport unit (and therefor its properties). 
+ * Each of these cells will contain the Airport unit (and therefor its properties). 
  *  
  */
 public class myGrid extends Grid {
@@ -30,8 +25,8 @@ public class myGrid extends Grid {
      * null for every value (no units are placed on the grid).
      */
     public myGrid() {
-        for (String rowName : super.rowNames) {
-            for (String colName : super.colNames) {
+        for (String rowName : super.getRowNames()) {
+            for (String colName : super.getColNames()) {
                 gridCells.put(rowName + colName, null);
             }
         }

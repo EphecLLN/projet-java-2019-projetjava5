@@ -1,8 +1,3 @@
-/**
- * @author Martin Michotte
- * @date 23/11/2019
- */
-
 package view;
 
 import java.util.Observable;
@@ -12,11 +7,19 @@ import controller.PlayerController;
 import model.PlayerModel;
 
 /**
- * //TODO
+ * This class has the function of View in the MVC structure.
+ * 
+ * It will check for changes in the model and in our case, send those changes to the client. 
  */
-public class PlayerViewCmd extends PlayerView implements Observer {
-	
-	public PlayerViewCmd(PlayerModel model, PlayerController controller) {
+public class PlayerViewAll extends PlayerView implements Observer {
+    
+    /**
+     * Constructor
+     * 
+     * @param model {PlayerModel} - the model of the game
+	 * @param controller {PlayerController} - the controller of the game
+     */
+	public PlayerViewAll(PlayerModel model, PlayerController controller) {
 		super(model, controller);
 	}
 

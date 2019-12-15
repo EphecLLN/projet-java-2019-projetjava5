@@ -1,8 +1,3 @@
-/**
- * @author Martin Michotte
- * @date 23/11/2019
- */
-
 package view;
 
 import java.util.Observer;
@@ -19,6 +14,12 @@ public abstract class PlayerView implements Observer{
 	protected PlayerModel model;
 	protected PlayerController controller;
 	
+	/**
+	 * Constructor
+	 * 
+	 * @param model {PlayerModel} - the model of the game
+	 * @param controller {PlayerController} - the controller of the game
+	 */
 	public PlayerView(PlayerModel model, PlayerController controller) {
 		this.model = model;
 		this.controller = controller;

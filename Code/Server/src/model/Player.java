@@ -1,8 +1,3 @@
-/**
- * @author Martin Michotte
- * @date 23/11/2019
- */
-
 package model;
 
 import java.io.*;
@@ -10,21 +5,21 @@ import java.net.*;
 
 import controller.PlayerController;
 import test.*;
-import view.PlayerViewCmd;
+import view.PlayerViewAll;
 
 /**
- * This class discribes a Player with its attributes and methods. 
- * This class is created whenever a client connects to the server and it's asociated to that client. 
+ * This class describes a Player with its attributes and methods. 
+ * This class is created whenever a client connects to the server and it's associated to that client. 
  * The game in itself is therefor a battle between two instances of this class. 
  * 
- * Once both instances are ready (all units have been placed), they autmatically start playing :
+ * Once both instances are ready (all units have been placed), they automatically start playing :
  * 
- * Beforhand: The turn is randombly given to one of the instances
+ * Beforehand: The turn is randomly given to one of the instances
  * -> The instance that has the turn ask the client to shoot while the other instance waits its turn
  * -> Once the shot is done, the instance gives his turn to the other
- * -> This process repaets itself until all the units of one of the instances are destroyed. 
+ * -> This process repeats itself until all the units of one of the instances are destroyed. 
  *  
- * This class is the actuel model of the game, since this class already inherits the Thread class, 
+ * This class is the actual model of the game, since this class already inherits the Thread class, 
  * a workaround had to be implemented to ensure the model is Observable. -> SEE PlayerModel Class.
  * 
  */
@@ -32,7 +27,7 @@ public class Player extends Thread {
 
     PlayerModel model;
     PlayerController playerContr;
-    PlayerViewCmd cmd;
+    PlayerViewAll views;
 
     String userName;
     private myGrid myGrid;
@@ -42,7 +37,7 @@ public class Player extends Thread {
     private final int NUMBER_OF_ROCKETS = 5;    //number of rockets to shoot on a rocket strike
 
     private String myKey = "";
-    public boolean isReady = false;
+    public boolean isReady = false; 
     public boolean isMyTurn = false;
 
     private DataInputStream in; 
@@ -70,7 +65,7 @@ public class Player extends Thread {
      * Associate this instance of the Player class to a client through the Players HashMap from the server
      * 
      * @param sock {Socket} - the socket on which the client is connected to the server
-     * @param in {DataInputStream} - the inputstream on which we can retreive data from the client
+     * @param in {DataInputStream} - the inputstream on which we can retrieve data from the client
      * @param out {DataOutputStream} - - the outputstream on which we send data to the client
      */
     public Player(Socket sock, DataInputStream in, DataOutputStream out)  
@@ -78,8 +73,8 @@ public class Player extends Thread {
 
         model = new PlayerModel(this);
         playerContr = new PlayerController(model);
-        cmd  = new PlayerViewCmd(model, playerContr);
-        playerContr.addView(cmd);
+        views  = new PlayerViewAll(model, playerContr);
+        playerContr.addView(views);
         
         //Creating both grids
         myGrid = new myGrid();
@@ -182,7 +177,7 @@ public class Player extends Thread {
      */
     protected void placeUnits() {
         for(Unit u : units){
-            if(u != null){                      //uniquement util de vérifier lorsque qu'on uttilise pas toutes les unités -> debug
+            if(u != null){
                 unitPlacer(u);
             }  
         }
@@ -198,11 +193,11 @@ public class Player extends Thread {
     //!---------------------------------------------------------------------------------
 
     /**
-     * Method thet checks which sot-types are available for the player to use,
+     * Method that checks which sot-types are available for the player to use,
      * if a unit is destroyed or if it is too soon to re-use a certain shot-type, the shot is not available.
      * 
      * @return {String} - Returns a string containing the letters associated to the shot-types if they are available 
-     * //-> Implement shoot limtit 
+     * //-> Implement shoot limit 
      */
     protected String getAvailableShotTypes(){
         String availableShotTypes = "S ";
@@ -211,7 +206,7 @@ public class Player extends Thread {
                 availableShotTypes += "/ A ";
             }
         }
-        if(false){                // if(RadarTower.getIsAlive()){ 
+        if(false){
             if(RadarTower.getStateBonus()){
                 availableShotTypes += "/ D ";
             }
@@ -230,8 +225,8 @@ public class Player extends Thread {
     }
 
     /**
-     * Method that checks if the shot hits a unit of the other player 
-     * and changes the model accordingly: //TODO - javadoc a complèter un peu plus 
+     * Method that checks if the given shot hits a unit of the other player 
+     * and changes the model accordingly.
      * 
      * @param shotCoord {String} - The coordinate of the shot
      */
@@ -264,14 +259,13 @@ public class Player extends Thread {
 
     /**
      * Method that asks the client to choose a shot-type and execute the shot.
-     * Asks for valid shot-type if client inpur is not valid.  
+     * Asks for valid shot-type if client input is not valid.  
      * 
      */
     protected void shoot() {
         String shotType, shotCoord, coords;
         String[] coordsArray;
         boolean shotExecuted = false;
-        int failCount = 0;
 
         sendToClient("S-T-"+getAvailableShotTypes()+"-NC");
         shotType = getFormClient();
@@ -320,7 +314,7 @@ public class Player extends Thread {
                     case "R":
                         sendToClient("Rem"); sendToClient("3");
                         for(int i = 0; i<NUMBER_OF_ROCKETS;i++){ 
-                            shotCoord = myGrid.rowNames[(int)(Math.random()*(myGrid.rowNames.length-1))]+myGrid.colNames[(int)(Math.random()*(myGrid.rowNames.length-1))];
+                            shotCoord = myGrid.getRowNames()[(int)(Math.random()*(myGrid.getRowNames().length-1))]+myGrid.getColNames()[(int)(Math.random()*(myGrid.getRowNames().length-1))];
                             checkForHit(shotCoord);
                             sleep(500);
                         }
@@ -344,7 +338,6 @@ public class Player extends Thread {
                     shotType = getFormClient();
                     sendToClient("Rem"); sendToClient("1");
                 }
-                failCount = 1;
             }
 
         }
@@ -359,7 +352,7 @@ public class Player extends Thread {
     protected void checkForWin(){
         boolean won = false;
         for(Unit u : otherPlayer().units){
-            if(u != null){                  //uniquement util de vérifier lorsque qu'on uttilise pas toutes les unités -> debug
+            if(u != null){ 
                 if(u.getIsAlive()){
                     won = false;
                     break;
@@ -372,41 +365,6 @@ public class Player extends Thread {
             otherPlayer().sendToClient("LOST");
             System.exit(0);
         }
-    }
-
-    
-    //!---------------------------------------------------------------------------------
-    //!                               Getters & Setters
-    //!---------------------------------------------------------------------------------
-
-    /**
-     * This method prints the client information associated to this instance of the Player class on the server cmdLine
-     */
-    private void getClientInfo(){
-        long id = Thread.currentThread().getId(); 
-
-        userName = getFormClient();
-        System.out.println("A new "+ PURPLE_FG +"client"+ BLUE_FG +" \""+userName+"\""+ RESET_COLOR +" with id" + RED_FG +" ("+id+")"+
-                            RESET_COLOR +" joined via " + YELLOW_FG + sock.getLocalAddress().toString().replaceAll("/", "")+ RESET_COLOR);
-        System.out.println("-------------------------------------------------------------------------");
-    }
-
-    /**
-     * Method tht returns the myGrid instance
-     * 
-     * @return {myGrid} - returns the myGrid instancte
-     */
-    public myGrid getMyGrid(){
-        return myGrid;
-    }
-    
-    /**
-     * Method tht returns the enemyGrid instance
-     * 
-     * @return {enemyGrid} - returns the enemyGrid instancte
-     */
-    public enemyGrid getEnemyGrid(){
-        return enemyGrid;
     }
 
     //!---------------------------------------------------------------------------------
@@ -428,9 +386,9 @@ public class Player extends Thread {
     }
 
     /**
-     * Method that lets this instance sleep for X miliseconds.
+     * Method that lets this instance sleep for X milliseconds.
      * 
-     * @param ms {int} - the time this thread needs to sleep in miliseconds
+     * @param ms {int} - the time this thread needs to sleep in milliseconds
      */
     private void sleep(int ms){
         try{
@@ -442,23 +400,60 @@ public class Player extends Thread {
         }
     }
 
+
+    //!---------------------------------------------------------------------------------
+    //!                               Getters & Setters
+    //!---------------------------------------------------------------------------------
+
+    /**
+     * This method prints the client information associated to this instance of the Player class on the server cmdLine
+     */
+    private void getClientInfo(){
+        long id = Thread.currentThread().getId(); 
+
+        userName = getFormClient();
+        System.out.println("A new "+ PURPLE_FG +"client"+ BLUE_FG +" \""+userName+"\""+ RESET_COLOR +" with id" + RED_FG +" ("+id+")"+
+                            RESET_COLOR +" joined via " + YELLOW_FG + sock.getLocalAddress().toString().replaceAll("/", "")+ RESET_COLOR);
+        System.out.println("-------------------------------------------------------------------------");
+    }
+
+    /**
+     * Method tht returns the myGrid instance
+     * 
+     * @return {myGrid} - returns the myGrid instance
+     */
+    public myGrid getMyGrid(){
+        return myGrid;
+    }
+    
+    /**
+     * Method tht returns the enemyGrid instance
+     * 
+     * @return {enemyGrid} - returns the enemyGrid instance
+     */
+    public enemyGrid getEnemyGrid(){
+        return enemyGrid;
+    }
+
     //!---------------------------------------------------------------------------------
     //!                                    Playing  
     //!---------------------------------------------------------------------------------
 
     /**
      * This Method is the actual game-management,
-     * The truns are being handed and the active-player is alowed to shoot.
+     * The turns are being handed and the active-player is allowed to shoot.
      * 
      * Be aware -> this is method starts an infinite loop that can only be stopped if one of the players wins!
      * 
-     * //-> check if a player disconnects => will not be impemented 
+     * //-> check if a player disconnects => will not be implemented 
      */
     protected void play(){
         while(true){
             if(isMyTurn){
                 otherPlayer().sendToClient("C-It's not your turn, waiting for "+ this.userName +" to play.");
                 shoot();
+                otherPlayer().sendToClient("Rem");
+                otherPlayer().sendToClient("0");
                 otherPlayer().sendToClient("\u001B[2K");
                 otherPlayer().sendToClient("\u001B8");
                 checkForWin();
@@ -475,8 +470,8 @@ public class Player extends Thread {
      * Method that is called on the start command from the server, 
      * this method launches the game in four phases:
      * 
-     *  1) Initialisation of the UI 
-     *  2) Initialisation -> let the client place his units on the grid
+     *  1) Initialization of the UI 
+     *  2) Initialization -> let the client place his units on the grid
      *  3) Waits until both clients are ready to battle 
      *  4) Start the actual game between the two clients
      *  

@@ -1,8 +1,3 @@
-/**
- * @author Morgan Valentin
- * @date 15/11/2019
- */
-
 package junit_tests;
 
 import model.*;
@@ -11,7 +6,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.Assert;
 
 /**
- * 
+ * This class is used to test some of the methods of the Grid class
  */
 class GridTest {
 
