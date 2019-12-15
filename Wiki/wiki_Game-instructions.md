@@ -2,19 +2,19 @@
 
 Be sure to have at least [Java JDK 13](https://www.oracle.com/technetwork/java/javase/downloads/index.html) installed and added to your [PATH environement variable](https://docs.oracle.com/en/java/javase/13/install/installation-jdk-microsoft-windows-platforms.html#GUID-C11500A9-252C-46FE-BB17-FC5A9528EAEB).  
 
-## Command-line version
+## Command-line and GUI version
 
 ### Unix systems (Linux/OSX/...)
-#### Starting server:
+#### Starting the server:
 1. Open your favorite terminal
 2. Navigate to the Server/src folder
 3. Type: ./ServerLauncher.sh -> enter 
 4. Follow on-screen instructions 
 
-#### Starting client:
+#### Starting a client:
 1. Open your favorite terminal
 2. Navigate to the Client/src folder
-3. Type: ./ClientCMDLauncher.sh OR ./ClientGUILauncher.sh -> enter 
+3. Type: ./ClientCMDLauncher.sh OR ./ClientGUILauncher.sh -> enter *
 4. Follow on-screen instructions 
 
 ### Windows systems 
@@ -28,18 +28,18 @@ Be sure to have at least [Java JDK 13](https://www.oracle.com/technetwork/java/j
     * Terminal  -> Type : VT100
 4. Apply, save and quit terminal 
 
-#### Starting server:
+#### Starting the server:
 1. Navigate to the Server/src folder
 2. Right-click -> Open Git Bash terminal here 
 3. Type: ./ServerLauncher.sh -> enter 
 4. Follow on-screen instructions 
 
-#### Starting client:
+#### Starting a client:
 1. Navigate to the Client/src folder
 2. Right-click -> Open Git Bash terminal here 
-3. Type: ./ClientCMDLauncher.sh OR ./ClientGUILauncher.sh -> enter 
+3. Type: ./ClientCMDLauncher.sh OR ./ClientGUILauncher.sh -> enter * 
 4. Follow on-screen instructions 
 
-
-## GUI version
-The GUI version is not yet available.
+```diff
+- * Choose one, running both is similar to running two separate clients!
+```
