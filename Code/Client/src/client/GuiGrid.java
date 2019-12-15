@@ -1,5 +1,7 @@
 package client;
 
+import java.util.HashMap;
+
 import java.awt.*;
 import java.awt.event.*;
 
@@ -7,8 +9,9 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 
-import java.util.HashMap;
-
+/**
+ * This class is used to create, display and manipulate the GUI-interface of the game.
+ */
 public class GuiGrid {
 
 	private static Font miniFont = new Font(Font.SANS_SERIF,Font.BOLD,10);
@@ -18,25 +21,27 @@ public class GuiGrid {
 	public static HashMap<String,JButton> enemyGridButtons = new HashMap<>();
     static Color background = null;
 	
+	/**
+	 * Method that creates and adds the user's grid to the GUI-interface 
+	 * 
+	 * @param grid {JPanel} - the panel in which the buttons need to be placed
+	 */
 	protected static void createYourGrid(JPanel grid) {
 		for (int i=0; i<=row.length;i++) {
-			if (i!=0) {
-				System.out.println("");
-			}
 			for (int j=0;j<=col.length;j++) {
 				if (i==0) {	
 					if (j==0) {
-					grid.add(mkButDisabled("  "));}
+					grid.add(mkButDisabled("  "));} 		//creates top left corner as a blank button
 					else {
-						grid.add(mkButDisabled(j+"  "));
+						grid.add(mkButDisabled(j+"  "));	//creates the column headers
 					}
 				}
 				else{
 					if (j==0) {
-						grid.add(mkButDisabled(row[i-1] + " "));}
+						grid.add(mkButDisabled(row[i-1] + " "));}	//creates the row headers
 					else {
-						String key = row[i-1] + j;
-						JButton currentButton = mkBut("");
+						String key = row[i-1] + j;					//creates the cells
+						JButton currentButton = mkBut("");	
 						currentButton.setName(key);
 						grid.add(currentButton);
 						myGridButtons.put(key,currentButton);
@@ -46,24 +51,26 @@ public class GuiGrid {
 		}
 	}
 
+	/**
+	 * Method that creates and adds the enemy's grid to the GUI-interface 
+	 * 
+	 * @param grid {JPanel} - the panel in which the buttons need to be placed
+	 */
 	protected static void createEnnemyGrid(JPanel grid) {
 		for (int i=0; i<=row.length;i++) {
-			if (i!=0) {
-				System.out.println("");
-			}
 			for (int j=0;j<=col.length;j++) {
 				if (i==0) {	
 					if (j==0) {
-					grid.add(mkButDisabled("  "));}
+					grid.add(mkButDisabled("  "));}			//creates top left corner as a blank button
 					else {
-						grid.add(mkButDisabled(j+"  "));
+						grid.add(mkButDisabled(j+"  "));	//creates the column headers
 					}
 				}
 				else{
 					if (j==0) {
-						grid.add(mkButDisabled(row[i-1] + " "));}
+						grid.add(mkButDisabled(row[i-1] + " "));}	//creates the row headers
 					else {
-						String key = row[i-1] + j;
+						String key = row[i-1] + j;					//creates the cells
 						JButton currentButton = mkBut2("");
 						currentButton.setName(key);
 						grid.add(currentButton);
@@ -74,6 +81,14 @@ public class GuiGrid {
 		}
 	}
 
+	/**
+	 * Method that creates a button with a specific name and properties.
+	 * The button created is a user's grid button that represents a cell. 
+	 * 
+	 * @param text {String} - the text that should be displayed on the button
+	 * 
+	 * @return {JButton} - the just created button
+	 */
 	private static JButton mkBut (String text) {
    	 	JButton b = new JButton(text);
    	 	
@@ -92,7 +107,14 @@ public class GuiGrid {
    	 	return b;
 	}
 	
-
+	/**
+	 * Method that creates a button with a specific name and properties.
+	 * The button created is a enemy's grid button that represents a cell. 
+	 * 
+	 * @param text {String} - the text that should be displayed on the button
+	 * 
+	 * @return {JButton} - the just created button
+	 */
 	private static JButton mkBut2 (String text) {
    	 	JButton b = new JButton(text);
    	 	
@@ -110,6 +132,14 @@ public class GuiGrid {
    	 	return b;
 	}
 	
+	/**
+	 * Method that creates a button with a specific name and properties.
+	 * The button that is created is disabled!  
+	 * 
+	 * @param text {String} - the text that should be displayed on the button
+	 * 
+	 * @return {JButton} - the just created button
+	 */
 	private static JButton mkButDisabled (String text) {
 		JButton b = new JButton(text);
 		b.setMargin(new Insets(0, 0, 0, 0));
@@ -121,10 +151,18 @@ public class GuiGrid {
    	 	return b;
 	}
 
-
+	/**
+	 * Method that displays elements on a given grid based on the given parameters:
+	 * 
+	 * @param val {String} - The type of the element to display, this will affect what the user will see
+	 * @param data {String} - The coordinate of where the element should be placed 
+	 * 						  and sometimes combined with the name of a unit 
+	 * @param isOutGoing {boolean} - the grid in which the element should be placed,
+	 * 								 true: enemyGrid, false: myGrid
+	 */
 	protected static void insertInGrid(String val, String data, boolean isOutGoing) {
+		
 		JButton thisButton;
-
 		String coord = data.split("/")[0];
 
 		// insert in the ennemy's grid
@@ -136,7 +174,6 @@ public class GuiGrid {
 			thisButton = myGridButtons.get(coord);
 		}
 		
-
 		switch (val) {
 			case "Unit":
 				switch(data.split("/")[1]){
@@ -177,9 +214,5 @@ public class GuiGrid {
 				break;
 		}
 	}
-
-
-
-
 
 }

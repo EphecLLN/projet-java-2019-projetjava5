@@ -4,21 +4,26 @@ import java.io.*;
 import java.net.*;
 import java.util.Scanner; 
   
-/**
- * @author Morgan Valentin
- * @Source code used to understand => https://www.geeksforgeeks.org/introducing-threads-socket-programming-java/
-*/
+// @Source code used to understand => https://www.geeksforgeeks.org/introducing-threads-socket-programming-java/
 
 /**
- * //TODO
+ * This class inherits from the CLient class.
+ * This class is executable and is responsible for displaying the game on the command-lin. 
+ * 
+ * This class is separated in two big sections :
+ * 
+ *  1) First the user is prompted to enter valid connection information to connect to
+ *     the server.
+ * 
+ *  2) Once connected, the class will wait for a query from the server,
+ *     process the incoming data and act accordingly.
  */
 public class ClientCmd extends Client { 
 
     private Scanner scn;
+    private CmdGrid gridDisplay = new CmdGrid();
 
-    private CmdGridDisplay gridDisplay = new CmdGridDisplay();
-
-    //Escape characters tho control the cmdline display. => ! only works on unix systems !
+    //Escape characters tho control the cmdline display.
     public static final String RED_FG       = "\u001B[31m";
     public static final String GREEN_FG     = "\u001B[32m";
     public static final String BLUE_FG      = "\u001B[34m";
@@ -28,37 +33,37 @@ public class ClientCmd extends Client {
     public static final String CLEAR_SCREEN = "\u001B[2J";
     public static final String HOME_CURSOR  = "\u001B[H";
 
-    // !---------------------------------------------------------------------------------
-    // !                                  Constructor
-    // !---------------------------------------------------------------------------------
+    //!---------------------------------------------------------------------------------
+    //!                                  Constructor
+    //!---------------------------------------------------------------------------------
     
-     /**
-     * Constructor
-     */
+    /**
+    * Constructor
+    */
     public ClientCmd(){
         scn = new Scanner(System.in); 
     }
     
     
     //!---------------------------------------------------------------------------------
-    //!                          Initialize Cleint <-> Server Connection 
+    //!                       Initialize Client <-> Server Connection 
     //!---------------------------------------------------------------------------------
 
     /**
-     * Method that checks if name (input from user) is between 4 and 12 chracters in length
-     * @param name {String} - //TODO
-     * @param scanner {Scanner} - //TODO
+     * Method that checks if name (input from user) is between 4 and 12 characters in length
+     * 
+     * @param name {String} - the name the user has input. 
      */
-	private void checkNameClient(String name,Scanner scanner) {
+	private void checkNameClient(String name) {
         while (name.length()<4 || name.length() >13) {
             System.out.println("Invalid input. Please re-enter a name (min 4 - max 12 :");
-            name = scanner.nextLine();
+            name = scn.nextLine();
         }
     }
     
     /**
-     * Method thet initialises a connection with the server
-     * 
+     * Method that tries to establish a connection with the server.
+     * If an error occurs, it will be displayed on the cmd-line with no further action.
      */
     private void InitConnection(){
 
@@ -68,7 +73,7 @@ public class ClientCmd extends Client {
         // Retrieving client's name from user input :
         System.out.println("What's your name ?");
         name = scn.nextLine();
-        checkNameClient(name,scn);
+        checkNameClient(name);
 
         // Retrieving port from user input :
         System.out.println(PURPLE_FG+"Port number ? (press enter for default port: 5555)"+RESET_COLOR);
@@ -82,8 +87,7 @@ public class ClientCmd extends Client {
             
         System.out.println(BLUE_FG+name+"> "+PURPLE_FG+port+RESET_COLOR);
         
-
-        //Retrieving ip adress from user input :
+        //Retrieving ip address from user input :
         System.out.println(RED_FG+"IP address ? (nothing + enter = localhost)"+RESET_COLOR);
         super.ip = scn.nextLine();
         if (super.ip.length()==0) {ip = "localhost";}
@@ -100,18 +104,25 @@ public class ClientCmd extends Client {
         in = new DataInputStream(sock.getInputStream()); 
         out = new DataOutputStream(sock.getOutputStream()); 
 
-        out.writeUTF(name);//Sends client name to server
+        out.writeUTF(name); //Sends client name to server
 
         }
-        catch(Exception e){}
+        catch(Exception e){
+            System.out.println(e);
+            System.out.println("ERROR - unable to connect to the server");
+        }
     }
     
     //!---------------------------------------------------------------------------------
-    //!                          Cleint <-> Server Communication 
+    //!                          Client <-> Server Communication 
     //!---------------------------------------------------------------------------------
 
     /**
      * Method that gets and processes the queries from the server.
+     * There are two main kind of queries:
+     * 
+     *  -> queries where the user is asked to do something 
+     *  -> queries only to update the display, no user-interaction needed
      */
     private void listenToServer(){
         String[] queryFromServer;
@@ -124,6 +135,11 @@ public class ClientCmd extends Client {
             queryFromServer = getFromServer().split("-"); 
             command = queryFromServer[0];
             switch(command){
+                
+                //!---------------------------
+                //!  Interactions with user 
+                //!---------------------------
+
                 case "U":   //Placing of units -> queryFromServer format : U-<unitName>-<unitSize>-<Comment>
                     String unitName = queryFromServer[1];
                     comment = queryFromServer[3];
@@ -178,11 +194,16 @@ public class ClientCmd extends Client {
                     sendToServer(strToServer);
                     break;
 
+
+                //!---------------------------
+                //!    display management  
+                //!---------------------------
+
+
                 case "C": //Comment without input from client
                     comment = queryFromServer[1];
                     System.out.print(comment);
                     break;
-
 
                 case "displayGrid":
                     System.out.print("disp"); 
@@ -190,7 +211,7 @@ public class ClientCmd extends Client {
                     break;
 
                 case "insertUnit":
-                command = getFromServer();
+                    command = getFromServer();
                     gridDisplay.insertInGrid("Unit", command, false);
                     break;
                 
@@ -244,7 +265,7 @@ public class ClientCmd extends Client {
                     break;
 
                 default:
-                    System.out.print(command); //TODO
+                    System.out.print(command);
             }
         }
 
@@ -252,8 +273,11 @@ public class ClientCmd extends Client {
 
 
     //!---------------------------------------------------------------------------------
-    //!                                       MAIN
+    //!                                     MAIN
     //!---------------------------------------------------------------------------------
+    /**
+     * Run main to start client in cmd-line display mode
+     */
     public static void main(String[] args){
     	try {
     		ClientCmd client = new ClientCmd();
