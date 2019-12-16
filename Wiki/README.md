@@ -4,6 +4,8 @@
 
 [Go to ***Introduction***](wiki_Introduction.md)
 
+[Go to ***Pointeur delivrables***](wiki_Pointeur_delivrables.md)
+
 [Go to ***Game instructions***](wiki_Game-instructions.md)
 
 [Go to ***UML***](wiki_UML.md)
