@@ -5,7 +5,7 @@
 
 
 ## Contexte du projet et objectifs :
-Dans le cadre du cours de Développement informatique avancé orienté applications (java), il nous est demandé de réaliser une application utilitaire ou bien un jeu qui se présente à la fois sous forme d’interface graphique et en ligne de commande. Ceux-ci doivent comporter une communication réseau ou une interaction avec une base de données ou éventuellement un service web.
+Dans le cadre du cours de Développement informatique avancé orienté applications (Java), il nous est demandé de réaliser une application utilitaire ou bien un jeu qui se présente à la fois sous forme d’interface graphique et en ligne de commande. Ceux-ci doivent comporter une communication réseau ou une interaction avec une base de données ou éventuellement un service web.
 
 Nous avons opté pour la réalisation d’un jeu vidéo de type 1 contre 1 en réseau se basant sur le jeu populaire « bataille navale ».
 
@@ -45,8 +45,8 @@ Nous décrivons ci-dessous les besoins fonctionnels du programme pour un joueur 
 
 #### Interface de jeu :
 * 2 grilles de 13x13 cases 
-* Une grille sur laquelle le joueur place ces unités et voit les attaques infligées par son adversaire.
-* Une grille sur laquelle le joueur peut placer ces propres attaques et en voir le résultat. 
+* Une grille sur laquelle le joueur place ses unités et voit les attaques infligées par son adversaire.
+* Une grille sur laquelle le joueur peut placer ses propres attaques et en voir le résultat. 
 
 #### Unités :
 Le joueur dispose de 6 unités (3 <span style="color: brown">bâtiments</span> et 3 <span style="color: blue">véhicules</span>) :
@@ -64,7 +64,7 @@ Le joueur dispose de 6 unités (3 <span style="color: brown">bâtiments</span> e
 #### Bonus :
 *Air-strike* : Un avion largue des bombes sur 7 cases en ligne. <br>
 
-*Radar Discovery* : 4 cases adjacente une à une peuvent être découverte.<br>
+*Radar Discovery* : 4 cases adjacentes une à une peuvent être découverte.<br>
 
 *Big-shot* : Un obus de 800mm explose sur une case et détruit toutes les cases adjacentes.<br>
 
@@ -80,15 +80,15 @@ Le serveur doit pouvoir :
 2.	Donner le tour à chacun des joueurs. 
 3.	Recevoir les informations  du joueur qui a le tour. 
 4.	Traiter les informations reçues. 
-5.	Renvoyer des informations aux deux joueurs. (Où est ce que le tir a été effectué, est-ce qu’une unité a été touchée, …) 
+5.	Renvoyer des informations aux deux joueurs. (La case où le tir a été effectué, l’état d’une unité, …)
 
 Le joueur doit pouvoir : 
 
 1.	Se connecter au serveur.
-2.	Avant le commencement de la partie, placer ces unités sur la grille de jeu. 
+2.	Avant le commencement de la partie, placer ses unités sur la grille de jeu. 
 3.	Visualiser les deux grilles de jeu :
 a.	Sa grille contenant ses unités et leur état. (non touchée, touchée, détruite)
-b.	La grille de l’adversaire avec la position de ces propres tires et l’état de ceux-ci. (touché, non touché) (cette grille est vierge au début de la partie)
+b.	La grille de l’adversaire avec la position de ses propres tires et l’état de ceux-ci. (touché, non touché) (cette grille est vierge au début de la partie)
 4.	Lorsque c’est son tour, tirer sur une case de la grille de son adversaire ou utiliser une attaque spéciale. 
 5.	Lorsque ce n’est pas son tour, le joueur ne peut rien faire hormis observe l’attaque de son adversaire. 
 6.	Quitter le jeu sans avoir terminé la partie. (L’adversaire aura alors gagné par abandon) 
