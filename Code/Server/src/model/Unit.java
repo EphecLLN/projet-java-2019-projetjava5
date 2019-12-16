@@ -111,10 +111,7 @@ public class Unit {
                 else{
                     stateBonus = false;
                 }
-            }
-            else{
-                stateBonus = true;
-            }   
+            } 
         return stateBonus;
     }
 

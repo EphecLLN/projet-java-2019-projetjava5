@@ -34,6 +34,7 @@ public class Client {
         catch(IOException e){
             System.out.println(e);
             System.out.println("ERROR - unable to send information to the server");
+            System.exit(0);
         }
     }
 
@@ -50,6 +51,7 @@ public class Client {
         catch(IOException e){
             System.out.println(e);
             System.out.println("ERROR - unable to receive information from the server");
+            System.exit(0);
         }
         return "";
     }
@@ -67,6 +69,7 @@ public class Client {
         catch(InterruptedException e){
             System.out.println(e);
             System.out.println( "ERROR - Thread could not sleep");
+            System.exit(0);
         }
     }
 

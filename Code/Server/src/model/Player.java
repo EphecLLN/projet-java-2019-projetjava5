@@ -263,15 +263,17 @@ public class Player extends Thread {
      * 
      */
     protected void shoot() {
-        String shotType, shotCoord, coords;
+        String availableShotTypes, shotType, shotCoord, coords;
         String[] coordsArray;
         boolean shotExecuted = false;
 
-        sendToClient("S-T-"+getAvailableShotTypes()+"-NC");
+        availableShotTypes = getAvailableShotTypes();
+
+        sendToClient("S-T-"+availableShotTypes+"-NC");
         shotType = getFormClient();
         
         while(!shotExecuted){
-            if(getAvailableShotTypes().contains(shotType)){
+            if(availableShotTypes.contains(shotType)){
                 switch (shotType) {
                     case "S":
                         sendToClient("Rem"); sendToClient("3");
@@ -328,13 +330,13 @@ public class Player extends Thread {
                 String types = "S A D B R";
                 if(types.contains(shotType)){
                     sendToClient("Rem"); sendToClient("3");
-                    sendToClient("S-T-"+getAvailableShotTypes()+"-The shot type you entered is not available. Use another one.\n");
+                    sendToClient("S-T-"+availableShotTypes+"-The shot type you entered is not available. Use another one.\n");
                     shotType = getFormClient();
                     sendToClient("Rem"); sendToClient("1");
                 }
                 else{
                     sendToClient("Rem"); sendToClient("3");
-                    sendToClient("S-T-"+getAvailableShotTypes()+"-Invalid input. Please enter valid shot type.\n");
+                    sendToClient("S-T-"+availableShotTypes+"-Invalid input. Please enter valid shot type.\n");
                     shotType = getFormClient();
                     sendToClient("Rem"); sendToClient("1");
                 }
@@ -486,6 +488,7 @@ public class Player extends Thread {
             sleep(100);
         };
         sendToClient("Rem");sendToClient("1");
+        sleep(200);
         play();
     }
 

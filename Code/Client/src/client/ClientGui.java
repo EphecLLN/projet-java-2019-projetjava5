@@ -415,7 +415,7 @@ public class ClientGui extends Client {
                     case "T": // shot Type
                         String availableShotTypes = queryFromServer[2];
                         setShotAvailability(availableShotTypes);
-                        setText("Choose a shot type\n");
+                        setText("It's your turn to shoot, choose an available shot type!\n");
                         if (!comment.equals("NC")) {
                             addText(comment);
                         }
