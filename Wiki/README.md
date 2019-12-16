@@ -8,6 +8,8 @@
 
 [Go to ***Game instructions***](wiki_Game-instructions.md)
 
+[Go to ***Rapport(pdf)***](https://github.com/EphecLLN/projet-java-2019-projetjava5/blob/master/doc/Rapport/Rapport_Projet-Java_Groupe5.pdf)
+
 [Go to ***UML***](wiki_UML.md)
 
 [Go to ***Cahier des charges***](wiki_CDC.md)
